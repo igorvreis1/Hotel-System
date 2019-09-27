@@ -10,6 +10,7 @@ int main(void){
             {
             int qua=0,cat=0;
             int data[3];
+            int hora[2];
             
             printf("Escolha a classe do seu quarto:\n\t1 - Luxo\n\t2 - Normal\n\t3 - Simples\n");
             scanf("%d",&cat);
@@ -52,9 +53,17 @@ int main(void){
                         printf("Quarto para uma familía, categoria simples.");
                         return 0;
                     }
-                    printf("Digite a data que deseja fazer seu check-in:\n");
-                    scanf("%d:%d:%d",&data[0],&data[1],&data[2]);
-
+                    while(1){
+                        printf("Digite a data que deseja realizar seu check-in:(20/10/1971)\n");
+                        scanf("%d/%d/%d",&data[0],&data[1],&data[2]);
+                        printf("Digite a hora que deseja realizar seu check-in:(04:20)");
+                        scanf("%d:%d",hora[0],hora[1]);
+                        verifData(data,hora);
+                        // if (data[1]== 1 || data[1] == 3 || data[1]== 5 || 7|| 8 || 10 || 12 ){
+                            
+                        // }
+                        
+                    }    
 
             }else if(cat!=1 && cat!=2 && cat!=3){
                 continue;
@@ -86,5 +95,11 @@ int main(void){
 
 
     return 0;
+}
+
+int verifData(int *data, int *hora){
+    int i;
+
+    for
 }
 
