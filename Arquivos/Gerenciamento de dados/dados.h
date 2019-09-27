@@ -70,7 +70,7 @@
         unsigned int codigo;
         char desc[str];
         int estoque;
-        int EstMin;
+        int estMin;
         float pCusto;
         float pVenda;
     }tipoProdutos;
@@ -98,4 +98,21 @@
         char perm[modulos]; //- -> sem acesso / + -> acesso
     }tipoFuncionarios;
     
+    //Funçoes
+
+    /*
+        Hotel: Função utilizada para atualizar ou inserir as informaçoes do hotel e gerente
+    */
+    void hotel(void);
+
+    /*
+        addProd: Função utilizada para adicionar novos produtos ou atualizar
+    */
+    void addProd(void);
+
+    /*
+        checkInfo: Função que checa se as informações estão corretas
+    */
+    int checkInfo(void);
+
 #endif
