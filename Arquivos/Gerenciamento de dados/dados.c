@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 //funções
-void editHotel(void)
+void hotel(void)
 {
     char op;
     tipoHotel hotel;
