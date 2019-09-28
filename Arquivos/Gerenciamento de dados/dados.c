@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 //funções
-void hotel(void)
+void hotel(void)//editar hotel
 {
     char op;
     tipoHotel hotel;
@@ -60,30 +60,41 @@ void hotel(void)
     }
 }
 
-void addProd(void)
+void addProd(void)//adicionar produtos
 {
     tipoProdutos adProduto;
-    printf("Informe o codigo do produto (0001): ");
-    scanf("%d", &adProduto.codigo);
-    //checar se o código é único;
+    while(1)
+    {
+        printf("Informe o codigo do produto (0001): ");
+        scanf("%d", &adProduto.codigo);
+        //checar se o código é único;
 
-    printf("De uma descricao para o produto: ");
-    scanf("%[^\n]", &adProduto.desc);
+        printf("De uma descricao para o produto: ");
+        scanf("%[^\n]", &adProduto.desc);
 
-    printf("Informe quanto tem desse produto no estoque: ");
-    scanf("%d", &adProduto.estoque);
+        printf("Informe quanto tem desse produto no estoque: ");
+        scanf("%d", &adProduto.estoque);
 
-    printf("Informe qual o estoque minimo desse produto: ");
-    scanf("%d", &adProduto.estMin);
+        printf("Informe qual o estoque minimo desse produto: ");
+        scanf("%d", &adProduto.estMin);
 
-    printf("Informe qual o preco de custo do produto (10.20): R$ ");
-    scanf("%f", &adProduto.pCusto);
+        printf("Informe qual o preco de custo do produto (10.20): R$ ");
+        scanf("%f", &adProduto.pCusto);
 
-    //calcular o preco de venda
-    //printf("O preco de venda baseado no preco de custo e impostos e: R$%0.2f", &var);
+
+        pritnf("Codigo: %s\nDescricao: %s\n", adProduto.codigo, adProduto.desc);
+        printf("Estoque: %d\nEstoque minimo: %d\n", adProduto.estoque, adProduto.estMin);
+        printf("Preco de custo: %.2f\n", adProduto.pCusto);
+        //calcular o preco de venda
+        //printf("O preco de venda baseado no preco de custo e impostos sera: R$%.2f\n\n", adProduto.pVenda);
+        if(checkInfo())
+        {
+            //salvar no arquivo
+        }
+    }
 }
 
-int checkInfo(void)
+int checkInfo(void)//checar informacoes
 {
     char op;
     do{
@@ -92,11 +103,14 @@ int checkInfo(void)
 
             if('S' == toupper(op))
             {
+                printf("Informacoes salvas!\n");
                 return 1;
             }else
             if('N' == toupper(op))
+            {
+                printf("Faca as alteracoes!\n");
                 return 0;
-
+            }
             printf("Opcao invalida, tente novamente!\n");
         }while(toupper(op) != 'N' && toupper(op) != 'S');
 }
