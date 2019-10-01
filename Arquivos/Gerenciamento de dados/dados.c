@@ -9,7 +9,7 @@ void hotel(void)
 
     while(1)
     {
-        inicio: printf("Informe o nome do Hotel: ");
+        printf("Informe o nome do Hotel: ");
         scanf("%s%*c", &hotel.nome);
 
         printf("Informe a razao social do hotel: ");
@@ -53,19 +53,50 @@ void hotel(void)
         printf("Informe o horario de checkout do hotel (hh:mm): ");
         scanf("%d:%d", &hotel.checkout[0], &hotel.checkout[1]);
 
-        do{
+        if(checkInfo())
+        {
+            //salva no arquivo
+        }
+    }
+}
+
+void addProd(void)
+{
+    tipoProdutos adProduto;
+    printf("Informe o codigo do produto (0001): ");
+    scanf("%d", &adProduto.codigo);
+    //checar se o código é único;
+
+    printf("De uma descricao para o produto: ");
+    scanf("%[^\n]", &adProduto.desc);
+
+    printf("Informe quanto tem desse produto no estoque: ");
+    scanf("%d", &adProduto.estoque);
+
+    printf("Informe qual o estoque minimo desse produto: ");
+    scanf("%d", &adProduto.estMin);
+
+    printf("Informe qual o preco de custo do produto (10.20): R$ ");
+    scanf("%f", &adProduto.pCusto);
+
+    //calcular o preco de venda
+    //printf("O preco de venda baseado no preco de custo e impostos e: R$%0.2f", &var);
+}
+
+int checkInfo(void)
+{
+    char op;
+    do{
             printf("As informacoes estao corretas? (s - sim / n - nao): ");
             op = getchar();
 
             if('S' == toupper(op))
             {
-                //salva no arquivo
-                return;//sai da funcao
+                return 1;
             }else
             if('N' == toupper(op))
-                break;//volta para o topo
+                return 0;
 
             printf("Opcao invalida, tente novamente!\n");
-        }while(toupper(op) != 'N' && toupper(op) != 'S')
-    }
+        }while(toupper(op) != 'N' && toupper(op) != 'S');
 }
