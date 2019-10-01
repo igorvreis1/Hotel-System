@@ -1,9 +1,9 @@
 #include "dados.h"
-#include "str/strfuncoes.h"
+#include "strfuncoes.h"
 #include <stdio.h>
 
 //FUNCOES
-int hotel(void)//editar hotel
+void hotel(void)//editar hotel
 {
     char op;
     tipoHotel hotel;
