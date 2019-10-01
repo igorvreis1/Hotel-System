@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "dados.h"
 
-int main(void)
+int main()
 {
-    printf("hello world");
+
     return 0;
 }

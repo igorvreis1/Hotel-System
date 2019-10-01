@@ -4,7 +4,7 @@
     /*
         CONSTANTES NECESSARIAS
     */
-   #define nums 12
+   #define nums 11//telefone 11 - cnpj 14 - insc 13
    #define str 100
    #define lstr 255
    #define modulos 1 //quantidade de modulos que o programa tem
@@ -37,7 +37,7 @@
     unsigned int codigo; 
     char nome[str];
     char endereco[str];
-    char cpf[nums]; //DDDDDDDDD-DD
+    char cpf[12]; //DDDDDDDDD-DD
     char telefone[nums]; //DD-NNNNNNNNN
     char email[str];
     char sexo; //M - masculino; F - feminino
