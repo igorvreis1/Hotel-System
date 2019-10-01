@@ -1,8 +1,9 @@
 #include "dados.h"
+#include "str/strfuncoes.h"
 #include <stdio.h>
 
-//funções
-void hotel(void)//editar hotel
+//FUNCOES
+int hotel(void)//editar hotel
 {
     char op;
     tipoHotel hotel;
@@ -10,41 +11,48 @@ void hotel(void)//editar hotel
     while(1)
     {
         printf("Informe o nome do Hotel: ");
-        scanf("%s%*c", &hotel.nome);
+        scanf("%[^\n]%*c", &hotel.nome);
 
         printf("Informe a razao social do hotel: ");
-        scanf("%s%*c", &hotel.razao);
+        scanf("%[^\n]%*c", &hotel.razao);
+
+        printf("Informe o endereco do hotel: ");
+        scanf("%[^\n]%*c", &hotel.endereco);
 
         do{
-            printf("Informe a inscricao estadual do hotel (apenas numeros): ");
-            scanf("%13s%*c", &hotel.insc);
+            printf("Informe a inscricao estadual do hotel (apenas numeros/13 digitos): ");
+            scanf("%13[0-9]", &hotel.insc);
+            setbuf(stdin, NULL);
         }while(strlen(hotel.insc) != 13);
 
         do
         {
-            printf("Informe o cnpj do hotel (apenas numeros): ");
-            scanf("%14s%*c", &hotel.endereco);
+            printf("Informe o cnpj do hotel (apenas numeros/14 digitos): ");
+            scanf("%14[0-9]", &hotel.cnpj);
+            setbuf(stdin, NULL);
         } while(strlen(hotel.cnpj) != 14);
-        
-
-        do
-        {
-            printf("Informe o telefone do hotel (ddd-nnnnnnnnn): ");
-            scanf("%12s%*c", &hotel.telefone);
-        } while(strlen(hotel.telefone) != nums);
         
 
         printf("Informe o email do hotel: ");
         scanf("%s%*c", &hotel.email);
 
+
+        do
+        {
+            printf("Informe o telefone do hotel (ddnnnnnnnnn/11 digitos): ");
+            scanf("%11[0-9]", &hotel.telefone);
+            setbuf(stdin, NULL);
+        } while(strlen(hotel.telefone) != 11);
+
+
         printf("Informe o nome do gerente do hotel: ");
         scanf("%s%*c", &hotel.gerente);
 
         do{
-            printf("Informe o telefone do gerente do hotel (ddd-nnnnnnnnn): ");
-            scanf("%12s%*c", &hotel.telGer);
-        }while(strlen(hotel.gerente) != nums);
-        
+            printf("Informe o telefone do gerente do hotel (ddnnnnnnnnn/11 digitos): ");
+            scanf("%11[0-9]", &hotel.telGer);
+            setbuf(stdin, NULL);            
+        }while(strlen(hotel.telGer) != 11);
 
 
         printf("Informe o horario de checkin do hotel (hh:mm): ");
@@ -55,7 +63,9 @@ void hotel(void)//editar hotel
 
         if(checkInfo())
         {
+            printf("salvo");
             //salva no arquivo
+            return 1;
         }
     }
 }
@@ -89,28 +99,8 @@ void addProd(void)//adicionar produtos
         //printf("O preco de venda baseado no preco de custo e impostos sera: R$%.2f\n\n", adProduto.pVenda);
         if(checkInfo())
         {
+            printf("salvo");
             //salvar no arquivo
         }
     }
-}
-
-int checkInfo(void)//checar informacoes
-{
-    char op;
-    do{
-            printf("As informacoes estao corretas? (s - sim / n - nao): ");
-            op = getchar();
-
-            if('S' == toupper(op))
-            {
-                printf("Informacoes salvas!\n");
-                return 1;
-            }else
-            if('N' == toupper(op))
-            {
-                printf("Faca as alteracoes!\n");
-                return 0;
-            }
-            printf("Opcao invalida, tente novamente!\n");
-        }while(toupper(op) != 'N' && toupper(op) != 'S');
 }
