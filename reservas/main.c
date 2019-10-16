@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+//nãe é necessario no main
 #include <time.h>
 // #include "reserva.h"
 
@@ -29,6 +30,36 @@
 int verData(tipoData data, tipoHora hora, tipoDataOut dataOut);
 
 int main(void){
+            struct tm *data_hora_atual;     
+                
+            time_t segundos;//variável do tipo time_t para armazenar o tempo em segundos            
+          
+            time(&segundos);//obtendo o tempo em segundos   
+            
+              
+            data_hora_atual = localtime(&segundos);//para converter de segundos para o tempo local  
+                                                  //utilizamos a função localtime  
+            
+            //para acessar os membros de uma struct usando o ponteiro
+            //utilizamos o operador -> no nosso caso temos: 
+            //data_hora_atual->membro_da_struct
+            
+            //Acessando dados convertidos para a struct data_hora_atual  
+            printf("\nData Atual: %d/%d/%d\n", data_hora_atual->tm_mday, data_hora_atual->tm_mon+1,data_hora_atual->tm_year+1900);  
+            
+            //para retornar o mês corretamente devemos adicionar +1 
+            //como vemos abaixo
+            //printf("\nMes..........: %d\n", data_hora_atual->tm_mon+1);
+            
+            //para retornar o ano corretamente devemos adicionar 1900 
+            //como vemos abaixo
+            // printf("\nAno..........: %d\n\n", data_hora_atual->tm_year+1900);  
+            
+            // printf("\nDia do ano...: %d\n", data_hora_atual->tm_yday); 
+
+            printf("\nHora Atual: %d:%d:%d\n",data_hora_atual->tm_hour,data_hora_atual->tm_min,data_hora_atual->tm_sec);//hora,min,seg 
+            
+                
         while (1)
             {
             int qua=0,cat=0;
@@ -120,6 +151,7 @@ int main(void){
 }
 
 int verData(tipoData data, tipoHora hora, tipoDataOut dataOut){
+   
 
     int i=8;
     if(data.mes==2 && data.dia<1 && data.dia>28){
