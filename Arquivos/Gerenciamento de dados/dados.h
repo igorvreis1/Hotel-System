@@ -120,7 +120,7 @@
     /*
         addProd: Função utilizada para adicionar novos produtos ou atualizar
     */
-    void addProd(void);
+    int addProd(void);
 
     /*
         checkInfo: Função que checa se as informações estão corretas
