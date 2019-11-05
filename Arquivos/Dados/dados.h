@@ -8,7 +8,7 @@
    #define str 100
    #define lstr 255
    #define modulos 1 //quantidade de modulos que o programa tem
-   #define user 10 //quantidade de digitos do login
+   #define user 10 //quantidade de digitos do login (máximo 8) +1 \n
 
     /*
      TIPOS DE VARIAVEIS NECESSÁRIAS
