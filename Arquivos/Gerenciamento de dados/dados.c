@@ -1,6 +1,7 @@
 #include "dados.h"
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 //FUNCOES
 void hotel(void)//editar hotel
@@ -168,6 +169,8 @@ void cleanBuff(void)//limpa o buffer (CONCLUIDO)
 int checkHorario(int horario, char tipo)//concluida
 {   
     int r;
+    
+
     switch (tipo)
     {
         case 'h'://hora

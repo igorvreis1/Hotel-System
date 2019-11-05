@@ -45,7 +45,10 @@ int main(void){
             //data_hora_atual->membro_da_struct
             
             //Acessando dados convertidos para a struct data_hora_atual  
-            printf("\nData Atual: %d/%d/%d\n", data_hora_atual->tm_mday, data_hora_atual->tm_mon+1,data_hora_atual->tm_year+1900);  
+            int diaAtual = data_hora_atual->tm_mday;
+            int mesAtual = data_hora_atual->tm_mon+1;
+            int anoAtual = data_hora_atual->tm_year+1900;
+            printf("\nData Atual: %d/%d/%d\n", diaAtual,mesAtual ,anoAtual);  
             
             //para retornar o mês corretamente devemos adicionar +1 
             //como vemos abaixo
@@ -55,9 +58,11 @@ int main(void){
             //como vemos abaixo
             // printf("\nAno..........: %d\n\n", data_hora_atual->tm_year+1900);  
             
-            // printf("\nDia do ano...: %d\n", data_hora_atual->tm_yday); 
+            // printf("\nDia do ano...: %d\n", data_hora_atual->tm_yday);
+            int horaAtual = data_hora_atual->tm_hour;
+            int minAtual = data_hora_atual->tm_min;
 
-            printf("\nHora Atual: %d:%d:%d\n",data_hora_atual->tm_hour,data_hora_atual->tm_min,data_hora_atual->tm_sec);//hora,min,seg 
+            printf("\nHora Atual: %d:%d\n",horaAtual,minAtual);//hora,min,seg 
             
                 
         while (1)
@@ -152,20 +157,30 @@ int main(void){
 
 int verData(tipoData data, tipoHora hora, tipoDataOut dataOut){
    
-
-    int i=8;
     if(data.mes==2 && data.dia<1 && data.dia>28){
-        i=1;
+        return 1;
     }else if (data.mes!=2 && data.mes<8 && data.mes%2==0 && data.dia<1 && data.dia>30){
-        i=1;
+        printf("Data Ivalida, realize o chec-in novamente");
+        return 1;
     }else if (data.mes<8 && data.mes%2==1 && data.dia<1 && data.dia>31){
-        i=1;
+        printf("Data Ivalida, realize o chec-in novamente");
+        return 1;
     }else if (data.mes>8 && data.mes%2==1 && data.dia<1 && data.dia>30){
-        i=1;
+        printf("Data Ivalida, realize o chec-in novamente");
+        return 1;
     }else if(data.mes>8 && data.mes%2==0 && data.dia<1 && data.dia>31){
-        i=1;
-    }else i=0;
+        printf("Data Ivalida, realize o chec-in novamente");
+        return 1;
+    };
 
-    return i;
+
+    
+
+    return 0;
 }
+
+// int verAtualidade(int data_hora_atual->tm_mday,int data_hora_atual->tm_mon+1,int data_hora_atual->tm_year+1900,
+//                    int data_hora_atual->tm_hour,int data_hora_atual->tm_min,int data_hora_atual->tm_sec){
+
+// }
     
