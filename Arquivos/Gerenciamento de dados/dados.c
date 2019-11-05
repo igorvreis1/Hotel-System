@@ -1,10 +1,10 @@
 #include "dados.h"
 #include <string.h>
 #include <stdio.h>
-#include <time.h>
+#include <ctype.h>
 
 //FUNCOES
-void hotel(void)//editar hotel
+void hotel(void)//CORRIGIR SAVE DE ARQUIVO
 {
     tipoHotel hotel;
 
@@ -14,10 +14,10 @@ void hotel(void)//editar hotel
         fgets(hotel.nome, 99, stdin);
 
         printf("Informe a razao social do hotel: ");
-        fgets(hotel.nome, 99, stdin);        
+        fgets(hotel.razao, 99, stdin);        
 
         printf("Informe o endereco do hotel: ");
-        fgets(hotel.nome, 99, stdin);
+        fgets(hotel.endereco, 99, stdin);
 
         do{
             printf("Informe a inscricao estadual do hotel (apenas numeros/13 digitos): ");
@@ -60,32 +60,21 @@ void hotel(void)//editar hotel
 
         if(checkInfo())
         {
-            FILE *f;
-            if((f = fopen("..\\Saves\\hotel.txt", "w")) == NULL)//abre o arquivo
-            {
-                printf("Erro ao salvar os dados, tente novamente!\n");
-                continue;
-            }
-            
-            if(fwrite(&hotel, sizeof(hotel), 1, f) != 1)//escreve no arquivo
-            {
-                printf("Erro ao salvar no arquivo!\n");
-                continue;
-            }
-            //salva no arquivo
-            fclose(f);
+            //  SALVA NO ARQUIVO
+            printf("Salvo!");
             break;
         }
     }
 }
 
-void addProd(void)//adicionar produtos (    TESTAR      )
+int addProd(void)//Criar função que altera o local de save
 {
     tipoProdutos adProduto;
     while(1)
     {
         printf("Informe o codigo do produto (0001): ");
         scanf("%d", &adProduto.codigo);
+        cleanBuff();
         //checar se o código é único;
 
         printf("De uma descricao para o produto: ");
@@ -101,17 +90,30 @@ void addProd(void)//adicionar produtos (    TESTAR      )
         scanf("%f", &adProduto.pCusto);
 
 
-        pritnf("Codigo: %s\nDescricao: %s\n", adProduto.codigo, adProduto.desc);
+        printf("Codigo: %d\nDescricao: %s\n", adProduto.codigo, adProduto.desc);
         printf("Estoque: %d\nEstoque minimo: %d\n", adProduto.estoque, adProduto.estMin);
         printf("Preco de custo: %.2f\n", adProduto.pCusto);
         //calcular o preco de venda
         //printf("O preco de venda baseado no preco de custo e impostos sera: R$%.2f\n\n", adProduto.pVenda);
         if(checkInfo())
         {
-            printf("salvo");
-            //salvar no arquivo
+            FILE *p;
+            if((p = fopen("..\\Saves\\produtos.txt", "w")) == NULL){//abre o arquivo para escrita
+                printf("Erro ao abrir o arquivo!");
+                return 0;
+            }
+            fprintf(p, "%d\r\n%s\r\n%d\r\n%d\r\n%.2f\r\n%.2f", adProduto.codigo, adProduto.desc, adProduto.estoque, adProduto.estMin,
+            adProduto.pCusto, adProduto.pVenda);//salva os dados 1 abaixo do anterior, /r por correção de bug, apenas windows
+            fclose(p);
+
+            printf("Salvo!");
+            return 1;
         }
     }
+}
+
+void addFunc(){
+    
 }
 
 void gerente(void)//apenas criar função que altera o local de save
@@ -144,8 +146,9 @@ int checkInfo(void)//CONCLUIDA
 {
     char op;
     do{
-            printf("As informacoes estao corretas? (s - sim / n - nao): ");
-            scanf("%c%*c", &op);
+            printf("Deseja continuar? (s - sim / n - nao): ");
+            cleanBuff();
+            scanf("%c", &op);
 
             if('S' == toupper(op))
             {

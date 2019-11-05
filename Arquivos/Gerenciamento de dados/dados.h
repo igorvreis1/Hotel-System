@@ -8,7 +8,7 @@
    #define str 100
    #define lstr 255
    #define modulos 1 //quantidade de modulos que o programa tem
-   #define login 8 //quantidade de digitos do login
+   #define user 10 //quantidade de digitos do login
 
     /*
      TIPOS DE VARIAVEIS NECESSÁRIAS
@@ -105,8 +105,8 @@
     {
         unsigned int codigo;
         char nome[str];
-        char usuario[login];
-        char senha[login];
+        char usuario[user];
+        char senha[user];
         char perm[modulos]; //- -> sem acesso / + -> acesso
     }tipoFuncionarios;
     
@@ -120,7 +120,7 @@
     /*
         addProd: Função utilizada para adicionar novos produtos ou atualizar
     */
-    void addProd(void);
+    int addProd(void);
 
     /*
         checkInfo: Função que checa se as informações estão corretas
