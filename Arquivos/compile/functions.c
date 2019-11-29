@@ -185,7 +185,7 @@ void inicializa()//CONCLUIDO
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
 
-int cadastrar(char *tipo)//CONCLUIDO
+int cadastrar(char *tipo)
 {
   tipoLogin log = infoCad(), aux;
   int contador = 0;
@@ -315,7 +315,7 @@ int excluirLog(char *tipo, char *usuario)
   //   return 0;
 }
 
-int checkInfo(void) //CONCLUIDO
+int checkInfo(void) //CONCLUIDA
 {
   char op;
   do
@@ -335,7 +335,7 @@ int checkInfo(void) //CONCLUIDO
   } while (toupper(op) != 'N' && toupper(op) != 'S');
 }
 
-void cleanBuff(void) //CONCLUIDO
+void cleanBuff(void) //limpa o buffer (CONCLUIDO)
 {
   int ch = 0;
   while ((ch = getchar()) != '\n' && ch != EOF)
@@ -343,7 +343,7 @@ void cleanBuff(void) //CONCLUIDO
   }
 }
 
-int checkHorario(int horario, char tipo) //CONCLUIDO
+int checkHorario(int horario, char tipo) //concluida
 {
   int r;
   switch (tipo)

@@ -1,4 +1,0 @@
-ola;mundo
-peixe;boi
-ruan;silva
-pinto;72

@@ -1,0 +1,56 @@
+#ifndef VARS_H
+#define VARS_H
+
+    /*
+        CONSTANTES NECESSARIAS
+    */
+    #define raiz "C:\\ProgramData\\hotelSystem\\" // raiz principal do programa
+    #define nums 15//telefone 11 - cnpj 14 - insc 13
+    #define str 100
+    #define lstr 255
+    #define modulos 1 //quantidade de modulos que o programa tem
+    #define user 10 //quantidade de digitos do login (máximo 8) +1 \n
+    /*
+        TIPOS DE VARIAVEIS NESCESSARIAS
+    */
+
+     typedef struct
+    {
+        char codigo;
+        char usuario[user];
+        char senha[user];
+    }tipoLogin;
+
+    //Hóspedes
+   typedef struct
+   {
+    unsigned int codigo; 
+    char nome[str];
+    char endereco[str];
+    char cpf[nums]; //DDDDDDDDD-DD
+    char telefone[nums]; //DD-NNNNNNNNN
+    char email[str];
+    char sexo; //M - masculino; F - feminino
+    char estCiv;//C - casado; S - solteiro; D - divorciado; V - viúvo
+    int datNas[3];// DD/MM/AAAA
+   }tipoHospedes;
+
+
+    //QUANTIDADES para ter o controle de quanto de cada coisa tem
+   typedef struct
+   {
+       unsigned int clientes;
+       unsigned int funcionarios;
+       unsigned int fornecedores;
+       unsigned int produtos;
+       unsigned int quartos;
+       unsigned int reservas;
+   }tipoQuantidade;
+
+
+    /*
+        variaveis importantes globais (serao inicializadas com o inicio do programa)
+    */
+
+    char dirPadrao[255];
+#endif
