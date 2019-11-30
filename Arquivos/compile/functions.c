@@ -17,84 +17,42 @@ char *caminhoLog(char *tipo)
   return caminho;
 }
 
-// int logar(char *tipo, char open)//testar o código
-// {
-//   tipoLogin log;
+int logar(char *tipo)//testar o código
+{
+  tipoLogin log = infoLog(), aux;
 
-//   char caminho[255];
-//   strcpy(caminho, caminhoLog(tipo));
+  char caminho[255];
+  strcpy(caminho, caminhoLog(tipo));//concatena o caminho do save de login
 
-//   FILE *p;
-//   if ((p = fopen(caminho, "rb")) == NULL)
-//   {
-//     printf("Falha ao abrir o arquivo!\n");
-//     return 0;
-//   }
+  FILE *p;
+  if ((p = fopen(caminho, "rb")) == NULL)
+  {
+    printf("Falha ao abrir o arquivo!\n");
+    return EOPEN;
+  }
 
-//   while(!feof(p))
-//   {
-//     if(!feof(p))
-//     {
-      
-//     }
-//   }
-//   while (!feof(p)) //enquanto nao chegar ao fim do arquivo
-//   {
-//     fread(&aux, sizeof(tipoLogin), 1, p);
-//     aux.usuario[strlen(aux.usuario)] = '\0'; //adiciona \0 no final da
+  while(!feof(p))
+  {
+    if(!feof(p))
+    {
+      fread(&aux, sizeof(tipoLogin), 1, p);//pega os dados e salva em aux
+      if(strcmp(aux.usuario, log.usuario) == 0)//caso o usuario digitado e o login pegado no arquivo sejam iguais
+      {
+        //passa para o check da senha
+        if(strcmp(aux.senha, log.senha) == 0)//caso a senha digitada esteja correta
+        {
+          return SUCCESS;
+        }else
+        {
+          return FAILED;
+        }
+      }
+    }
+  }
+  return UNEXIST;
+}
 
-//     if ((strcmp(login.usuario, aux.usuario)) == 0)
-//     {
-//       fclose(p);       //fecha o arquivo
-//       if (open == 'c') //cadastro
-//       {
-//         printf("Esse usuario ja existe, tente outro!\n");
-//         return 0;
-//       }
-//       if ((strcmp(login.senha, aux.senha)) == 0)
-//       {
-//         system("clear");
-//         printf("Logado com sucesso!\n");
-//         if (tipo == "funcionario")
-//         {
-//           return 2;
-//         }
-//         else if (tipo == "administrador")
-//         {
-//           return 3;
-//         }
-//         else
-//         {
-//           return 1;
-//         }
-//       }
-//       else
-//       {
-//         printf("Senha incorreta, Tente novamente!\n");
-//         return 0;
-//       }
-//     }
-//   }
-//   if (open == 'c') //cadastro
-//   {
-//     int codigo;
-//     fseek(p, -sizeof(tipoLogin), SEEK_END); //retorna para uma posição antes do fim do arquivo
-//     fwrite(&codigo, sizeof(int), 1, p);//salva o ultimo codigo em código
-//     login.codigo = codigo;//salva o código do proximo usuario
-//     fseek(p, 0, SEEK_END);//vai para o fim do arquivo
-
-//     fwrite(&login, sizeof(tipoLogin), 1, p);
-//     fclose(p);
-
-//     printf("Usuario cadastrado com sucesso!\nUsuario: %s Senha: %s\n", login.usuario, login.senha);
-//     return 0;
-//   }
-//   printf("Usuario nao encontrado!\n\n");
-//   return 0;
-
-  
-// }
-tipoLogin infoCad()//concluido
+tipoLogin infoLog()//concluido
 {
   tipoLogin login;
   do
@@ -120,7 +78,7 @@ int alteraDir()//concluido
   if(!checkInfo())
   {
     printf("Operacao cancelada!\n");
-    return 0;
+    return CANCELED;
   }
 
   printf("Informe o caminho do diretorio que sera padrao: ");
@@ -130,7 +88,7 @@ int alteraDir()//concluido
   if((p = fopen("C:\\ProgramData\\hotelSystem\\dirPadrao.txt","w")) == NULL)
   {
     printf("Erro ao salvar diretorio padrao!\n");
-    return -1;
+    return EOPEN;
   }
 
   if(dir[strlen(dir)] != '\\')//adiciona a \ no ultimo caractere
@@ -140,7 +98,9 @@ int alteraDir()//concluido
 
   fprintf(p, "%s", dir);
   fclose(p);
+  return SUCCESS;
 }
+
 void pegaDir()//CONCLUIDO
 {
   FILE *p;
@@ -185,7 +145,7 @@ void inicializa()//CONCLUIDO
 
 int cadastrar(char *tipo)//CONCLUIDO
 {
-  tipoLogin log = infoCad(), aux;
+  tipoLogin log = infoLog(), aux;
   int contador = 0;
 
   char caminho[255];
@@ -196,7 +156,7 @@ int cadastrar(char *tipo)//CONCLUIDO
   {
     printf("Erro ao criar arquivo de cadastro!\n");
     printf("Verifique se o caminho para salvar os dados esta correto!\n");
-    return 1;
+    return EOPEN;
   }
 
   fseek(p, 0, SEEK_SET);//comeca a leitura no inicio do arquivo
@@ -208,12 +168,11 @@ int cadastrar(char *tipo)//CONCLUIDO
       if ((strcmp(aux.usuario, log.usuario)) == 0)
       {
         printf("Esse usuario ja existe, tente outro!\n");
-        return 2;
+        return AEXIST;
       }
       contador++;
     }
   }
-
     int codigo = 0;
 
     if(contador = 0)
@@ -233,7 +192,7 @@ int cadastrar(char *tipo)//CONCLUIDO
     fclose(p);
 
     printf("Usuario cadastrado com sucesso!\nUsuario: %s Senha: %s Codigo: %d\n", log.usuario, log.senha, log.codigo);
-    return 0;
+    return SUCCESS;
 }
 
 int excluirLog(char *tipo, char *usuario)
@@ -321,11 +280,11 @@ int checkInfo(void) //CONCLUIDO
 
     if ('S' == toupper(op))
     {
-      return 1;
+      return SUCCESS;
     }
     else if ('N' == toupper(op))
     {
-      return 0;
+      return CANCELED;
     }
     printf("Opcao invalida, tente novamente!\n");
   } while (toupper(op) != 'N' && toupper(op) != 'S');
@@ -356,7 +315,7 @@ int checkHorario(int horario, char tipo) //CONCLUIDO
   if (r == 1)
   {
     printf("\nHorario invalido, tente novamente!\n");
-    return 1;
+    return SUCCESS;
   }
-  return 0;
+  return FAILED;
 }

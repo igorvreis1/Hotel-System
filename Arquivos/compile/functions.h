@@ -5,22 +5,23 @@
     //      FUNÇÕES
 
     /*
-        infoCad: pede para que o usuario digite suas informações, retorna uma struct do tipoLogin com os dados
+        infoLog: pede para que o usuario digite suas informações, retorna uma struct do tipoLogin com os dados
         (sem \n no final)
     */
-    tipoLogin infoCad();
+    tipoLogin infoLog();
 
     /*
-        login: Pode ser utilizada para fazer login ou cadastrar um novo cliente.
-        Espera como parametro o tipo de usuario (cliente, funcionario ou administrador) e o tipo de abertura
-        (cadastro = c / login = l)
-        Retorna a struct com o nome e senha do usuario logado ou cadastrado
+        logar: Utilizada para fazer login de usuarios.
+        Espera como parametro o tipo de usuario (cliente, funcionario ou administrador)
+        retorna 1 caso o login seja feito;
+        Erros: EOPEN -> erro ao abrir o arquivo, FAILED -> senha incorreta, UNEXIST -> usuario nao existe
     */
-    int logar(char *tipo, char open);
+    int logar(char *tipo);
 
     /*
-        cadastro: utilizada para cadastrar um usuario, espera como parametro o tipo de cadastro
+        cadastrar: utilizada para cadastrar um usuario, espera como parametro o tipo de cadastro
         (cliente, funcionario, administrador)
+        returns: EOPEN -> erro ao abrir arquivo, AEXIST -> usuario ja existe, SUCCES -> cadastro efetuado
     */
     int cadastrar(char *tipo);
 
@@ -31,19 +32,19 @@
 
     /*
         checkHorario: Checa se a hora ou os minutos estão no padrao de horas (h < 24 ou m < 60)
-        retorna 0 caso estejam
+        retorna SUCCESS caso estejam, FAILED caso não estejam
         parametros: (hora ou minuto, 'm' ou 'h') onde 'm' para minuto e 'h' para hora
     */
    int checkHorario(int horario, char tipo);
 
     /*
-        checkInfo: Função que checa se as informações estão corretas
-        retorna 1 caso estejam
+        checkInfo: Função que checa se o usuario quer prosseguir
+        retorna SUCCES caso queira, CANCELED -> caso não
     */
     int checkInfo(void);
 
     /*
-        excluir: Apaga um usuario, espera como parametro o tipo (funcionario, cliente, admnistrador),
+        excluirLog: Apaga um usuario, espera como parametro o tipo (funcionario, cliente, admnistrador),
         o nome de usuario a ser excluido!
         Return: 1 caso de erro na abertura do arquivo, -1 caso o usuario cancele, 2 caso o usuario nao exista,
         0 caso ocorra com sucesso!
@@ -52,6 +53,7 @@
 
     /*
         alteraDir: altera o diretorio padrao de save de acordo com a escolha do usuario 
+        retorna CANCELED caso o usuario cancele ou SUCCESS
     */
     int alteraDir();
 
@@ -64,5 +66,11 @@
         inicializa: Inicializao o projeto criando as pastas e dependencias necessarias
     */
     void inicializa();
+
+    /*
+        caminhoLog: Concatena o caminho de save para login
+        espera como parametro o tipo de login (funcionario, cliente ou administrador)
+    */
+    char *caminhoLog(char *tipo);
 
 #endif

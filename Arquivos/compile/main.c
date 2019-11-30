@@ -9,6 +9,9 @@
 { 
   
   inicializa();
-  cadastrar("cliente");
+  if(logar("cliente") == SUCCESS)
+  {
+      printf("Logado com sucesso!");
+  }
   getchar();
 }

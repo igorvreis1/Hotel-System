@@ -10,6 +10,15 @@
     #define lstr 255
     #define modulos 1 //quantidade de modulos que o programa tem
     #define user 10 //quantidade de digitos do login (máximo 8) +1 \n
+
+
+    #define SUCCESS 1//quando a operação for concluida
+    #define FAILED -1//quando ocorrer falha na operação (exemplo uma senha incorreta)
+    #define EOPEN -2 //erro ao abrir arquivo
+    #define UNEXIST -3//quando a informação não existir
+    #define AEXIST -4 // quando a informação já existir
+    #define CANCELED -5//quando o usuario cancelar a operação
+
     /*
         TIPOS DE VARIAVEIS NESCESSARIAS
     */
