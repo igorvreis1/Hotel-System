@@ -65,4 +65,9 @@
     */
     void inicializa();
 
+    /*
+        caminhoLog: Concatena o caminho de save para login
+    */
+    char *caminhoLog(char *tipo);
+    
 #endif

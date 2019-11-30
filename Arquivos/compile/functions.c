@@ -7,39 +7,37 @@
 
 #include <sys/stat.h>//diretorios
 
-int logar(char *tipo, char open)//testar o código
+char *caminhoLog(char *tipo)
 {
+  char *caminho = malloc(sizeof(dirPadrao) + sizeof(tipo) + sizeof(".bin"));
+  strcpy(caminho, dirPadrao);
+  strcat(caminho, tipo);
+  strcat(caminho, ".bin");
+  free(caminho);
+  return caminho;
+}
 
-//   tipoLogin login, aux;
-//   char *arquivo = malloc(100);
-//   strcat(arquivo ,"Saves\\");
-//   strcat(arquivo , tipo);
-//   strcat(arquivo ,".bin");
+// int logar(char *tipo, char open)//testar o código
+// {
+//   tipoLogin log;
 
-//   do
-//   {
-//     printf("Digite seu nome de usuario (maximo 8 digitos): ");
-//     // fgets(login.usuario, user, stdin);
-//     scanf("%9[^\n]s", &login.usuario);
-//     cleanBuff();
-
-//     printf("\nDigite sua senha (maximo 8 digitos): ");
-//     // fgets(login.senha, user, stdin);
-//     scanf("%9[^\n]s", &login.senha);
-//     cleanBuff();
-//   } while (strlen(login.usuario) > 8 || strlen(login.senha) > 8);
-
-//   login.usuario[strlen(login.usuario)] = '\0';//adicionando \0 no ultimo caractere
+//   char caminho[255];
+//   strcpy(caminho, caminhoLog(tipo));
 
 //   FILE *p;
-//   if ((p = fopen(arquivo, "ab+")) == NULL)
+//   if ((p = fopen(caminho, "rb")) == NULL)
 //   {
 //     printf("Falha ao abrir o arquivo!\n");
 //     return 0;
 //   }
-//   free(arquivo);         //libera o caminho do arquivo
-//   fseek(p, 0, SEEK_SET); //começa a leitura no inicio do arquivo
 
+//   while(!feof(p))
+//   {
+//     if(!feof(p))
+//     {
+      
+//     }
+//   }
 //   while (!feof(p)) //enquanto nao chegar ao fim do arquivo
 //   {
 //     fread(&aux, sizeof(tipoLogin), 1, p);
@@ -95,7 +93,7 @@ int logar(char *tipo, char open)//testar o código
 //   return 0;
 
   
-}
+// }
 tipoLogin infoCad()//concluido
 {
   tipoLogin login;
@@ -185,15 +183,13 @@ void inicializa()//CONCLUIDO
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
 
-int cadastrar(char *tipo)
+int cadastrar(char *tipo)//CONCLUIDO
 {
   tipoLogin log = infoCad(), aux;
   int contador = 0;
 
-  char *caminho = malloc(sizeof(dirPadrao) + sizeof(tipo) + sizeof(".bin"));
-  strcpy(caminho, dirPadrao);
-  strcat(caminho, tipo);
-  strcat(caminho, ".bin");
+  char caminho[255];
+  strcpy(caminho, caminhoLog(tipo));
 
   FILE *p;
   if((p = fopen(caminho, "ab+")) == NULL)
@@ -315,7 +311,7 @@ int excluirLog(char *tipo, char *usuario)
   //   return 0;
 }
 
-int checkInfo(void) //CONCLUIDA
+int checkInfo(void) //CONCLUIDO
 {
   char op;
   do
@@ -335,7 +331,7 @@ int checkInfo(void) //CONCLUIDA
   } while (toupper(op) != 'N' && toupper(op) != 'S');
 }
 
-void cleanBuff(void) //limpa o buffer (CONCLUIDO)
+void cleanBuff(void) //CONCLUIDO
 {
   int ch = 0;
   while ((ch = getchar()) != '\n' && ch != EOF)
@@ -343,7 +339,7 @@ void cleanBuff(void) //limpa o buffer (CONCLUIDO)
   }
 }
 
-int checkHorario(int horario, char tipo) //concluida
+int checkHorario(int horario, char tipo) //CONCLUIDO
 {
   int r;
   switch (tipo)
