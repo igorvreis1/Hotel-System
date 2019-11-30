@@ -5,19 +5,21 @@
 #include <ctype.h>  //toupper
 #include <string.h> //tratamento de strings
 
+#include "dados.h"
+
 #include <sys/stat.h>//diretorios
 
-char *caminhoLog(char *tipo)
+char *caminhoLog(char *tipo)//CONCLUIDO
 {
-  char *caminho = malloc(sizeof(dirPadrao) + sizeof(tipo) + sizeof(".bin"));
-  strcpy(caminho, dirPadrao);
+  char *caminho = malloc(sizeof(padrao.dirPadrao) + sizeof(tipo) + sizeof(".bin"));
+  strcpy(caminho, padrao.dirPadrao);
   strcat(caminho, tipo);
   strcat(caminho, ".bin");
   free(caminho);
   return caminho;
 }
 
-int logar(char *tipo)//testar o código
+int logar(char *tipo)//CONCLUIDO
 {
   tipoLogin log = infoLog(), aux;
 
@@ -52,7 +54,7 @@ int logar(char *tipo)//testar o código
   return UNEXIST;
 }
 
-tipoLogin infoLog()//concluido
+tipoLogin infoLog()//CONCLUIDO
 {
   tipoLogin login;
   do
@@ -71,18 +73,18 @@ tipoLogin infoLog()//concluido
   return login;
 }
 
-int alteraDir()//concluido
+int alteraDir()//CONCLUIDO
 {
   char dir[255];
-  printf("Alterando diretorio padrao: %s\n", dirPadrao);
-  if(!checkInfo())
+  printf("Alterando diretorio padrao: %s\n", padrao.dirPadrao);
+  if(checkInfo() == CANCELED)
   {
     printf("Operacao cancelada!\n");
     return CANCELED;
   }
 
-  printf("Informe o caminho do diretorio que sera padrao: ");
-  fgets(dir, 255, stdin);
+  printf("Informe o caminho do diretorio que sera padrao \n(coloque uma \\ no final): ");
+  scanf("%255[^\n]s", &dir);
 
   FILE *p;
   if((p = fopen("C:\\ProgramData\\hotelSystem\\dirPadrao.txt","w")) == NULL)
@@ -91,13 +93,9 @@ int alteraDir()//concluido
     return EOPEN;
   }
 
-  if(dir[strlen(dir)] != '\\')//adiciona a \ no ultimo caractere
-  {
-    dir[strlen(dir)] = '\\';
-  }
-
   fprintf(p, "%s", dir);
   fclose(p);
+  pegaDir();//coloca na variavel o novo diretorio padrao
   return SUCCESS;
 }
 
@@ -112,7 +110,7 @@ void pegaDir()//CONCLUIDO
 
   char aux[255];
   fgets(aux, 255, p);
-  strcpy(dirPadrao, aux);//salva o conteudo de p em dirPadrao
+  strcpy(padrao.dirPadrao, aux);//salva o conteudo de p em dirPadrao
   fclose(p);//fecha o p
 }
 
@@ -139,6 +137,8 @@ void inicializa()//CONCLUIDO
   }
   fprintf(p, "%sSaves\\", raiz);
   fclose(p);
+
+
 
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
@@ -195,7 +195,7 @@ int cadastrar(char *tipo)//CONCLUIDO
     return SUCCESS;
 }
 
-int excluirLog(char *tipo, char *usuario)
+int excluirLog(char *tipo, char *usuario)//REFAZER
 {
   FILE *f;
   int tamanho = 0, existe = 0;
@@ -318,4 +318,55 @@ int checkHorario(int horario, char tipo) //CONCLUIDO
     return SUCCESS;
   }
   return FAILED;
+}
+
+int tamanhoArq(char* nome)//CONCLUIDO
+{
+    FILE *file = fopen(nome, "r");
+
+    if(file == NULL)
+        return 0;
+
+    fseek(file, 0, SEEK_END);
+    int size = ftell(file);
+    fclose(file);
+
+    return size;
+}
+
+int pegaCod(int tipo)
+{
+  FILE *p;
+  char caminho[255];
+  int cod = 0;
+
+  tipoProdutos aux;
+  
+
+  if(tipo == 0)//caso o tipo seja do tipo produto
+  {
+    strcpy(caminho, caminhoLog("produtos"));
+  }
+
+  if((p = fopen(caminho, "rb")) == NULL)
+  {
+    return EOPEN;
+  }
+
+  if(tamanhoArq(caminho) == 0)//caso o arquivo esteja vazio
+  {
+    cod = 1;
+    return cod;
+  }
+
+  if(tipo == 0)
+  {
+    fseek(p, -sizeof(tipoProdutos), SEEK_END);//vai para a penultima posiçao
+    fread(&aux, sizeof(tipoProdutos), 1, p);
+    aux.codigo++;
+    cod = aux.codigo;
+  }
+
+  fclose(p);
+  return cod;
 }

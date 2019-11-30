@@ -1,6 +1,7 @@
 #include "dados.h"
 #include "functions.h"
 #include "vars.h"
+#include<stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
@@ -69,49 +70,68 @@ void hotel(void)//CORRIGIR SAVE DE ARQUIVO
     }
 }
 
-int addProd(void)//Criar função que altera o local de save
+int addProd(void)//CONCLUIDO
 {
-    tipoProdutos adProduto;
-    while(1)
+    tipoProdutos adProduto, aux;
+    int quantidade = 0;
+
+    printf("Qual o codigo do fornecedor do produto: ");
+    scanf("%d", &adProduto.codForn);
+    cleanBuff();
+
+    if((verForn(adProduto.codForn, "a")) == FAILED)//verifica pelo codigo se o fornecedor existe
     {
-        printf("Informe o codigo do produto (0001): ");
-        scanf("%d", &adProduto.codigo);
-        cleanBuff();
-        //checar se o código é único;
-
-        printf("De uma descricao para o produto: ");
-        scanf("%255[^\n]", &adProduto.desc);
-
-        printf("Informe quanto tem desse produto no estoque: ");
-        scanf("%d", &adProduto.estoque);
-
-        printf("Informe qual o estoque minimo desse produto: ");
-        scanf("%d", &adProduto.estMin);
-
-        printf("Informe qual o preco de custo do produto (10.20): R$ ");
-        scanf("%f", &adProduto.pCusto);
-
-
-        printf("Codigo: %d\nDescricao: %s\n", adProduto.codigo, adProduto.desc);
-        printf("Estoque: %d\nEstoque minimo: %d\n", adProduto.estoque, adProduto.estMin);
-        printf("Preco de custo: %.2f\n", adProduto.pCusto);
-        //calcular o preco de venda
-        //printf("O preco de venda baseado no preco de custo e impostos sera: R$%.2f\n\n", adProduto.pVenda);
-        if(checkInfo())
-        {
-            FILE *p;
-            if((p = fopen("..\\Saves\\produtos.txt", "w")) == NULL){//abre o arquivo para escrita
-                printf("Erro ao abrir o arquivo!");
-                return 0;
-            }
-            fprintf(p, "%d\r\n%s\r\n%d\r\n%d\r\n%.2f\r\n%.2f", adProduto.codigo, adProduto.desc, adProduto.estoque, adProduto.estMin,
-            adProduto.pCusto, adProduto.pVenda);//salva os dados 1 abaixo do anterior, /r por correção de bug, apenas windows
-            fclose(p);
-
-            printf("Salvo!");
-            return 1;
-        }
+        return UNEXIST;
     }
+
+    printf("Qual o preco de frete total do fornecedor: R$");
+    scanf("%f", &adProduto.frete);
+    cleanBuff();
+
+    printf("De uma descricao para o produto: ");
+    scanf("%255[^\n]", adProduto.desc);
+    cleanBuff();
+
+    printf("Informe quanto e o imposto total cobrado por esse produto (5.30): R$");
+    scanf("%d", &adProduto.imposto);
+    cleanBuff();
+
+    printf("Informe qual sera o estoque minimo desse produto: ");
+    scanf("%d", &adProduto.estMin);
+    cleanBuff();
+
+    printf("Informe qual o preco de custo do produto (unitario) (10.20): R$");
+    scanf("%f", &adProduto.pCusto);
+    cleanBuff();
+
+    printf("Quantas unidades do produto foram compradas: ");
+    scanf("%d", &quantidade);
+    cleanBuff();
+
+    printf("\nCom base no preco de custo: R$%.2f, o imposto: %d%%\n", adProduto.pCusto, adProduto.imposto);
+    printf("O frete: R$%.2f, e a porcentagem de lucro: %.2f%%\n", adProduto.frete, padrao.lucr*100.0);
+    adProduto.pVenda = calc(adProduto.pCusto, adProduto.frete, adProduto.imposto, padrao.lucr, quantidade);
+    printf("O preco de venda sera: R$%.2f\n", adProduto.pVenda);
+
+    if(checkInfo() == SUCCESS)
+    {   
+        FILE *p;
+        char caminho[255];
+        strcpy(caminho, caminhoLog("produtos"));//concatena o caminho de save para produtos
+
+        if((p = fopen(caminho,"ab+")) == NULL)
+        {
+            return EOPEN;
+        }
+        
+        adProduto.estoque = quantidade;
+        adProduto.codigo = pegaCod(0);//pega o codigo do produto
+
+        fwrite(&adProduto, sizeof(tipoProdutos), 1, p);
+        fclose(p);
+        return SUCCESS;
+    }else
+        return CANCELED;
 }
 
 void gerente(void)//apenas criar função que altera o local de save
@@ -140,65 +160,166 @@ void gerente(void)//apenas criar função que altera o local de save
     }
 }
 
-int fornecedores()//EDITAR A FORMA DE SAVE
+int fornecedores()//CONCLUIDO
 {
-    tipoFornecedores fornecedor;
+    tipoFornecedores fornecedor, aux;
 
     printf("Fornecedor: \n\n");
     printf("Digite o nome social do fornecedor: ");
-    fgets(fornecedor.nome, str, stdin);
+    scanf("%100[^\n]", fornecedor.nome);
+    cleanBuff();
     
-
     printf("Digite o nome comercial do fornecedor: ");
-    fgets(fornecedor.razao, str, stdin);
+    scanf("%100[^\n]", fornecedor.razao);
+    cleanBuff();
 
     do{
         printf("Informe a inscricao estadual do fornecedor (apenas numeros/13 digitos): ");
-        scanf("%14[0-9]", &fornecedor.insc);
+        scanf("%14[0-9]", fornecedor.insc);
         cleanBuff();
     }while(strlen(fornecedor.insc) != 13);
 
     do
     {
         printf("Informe o cnpj do fornecedor (apenas numeros/14 digitos): ");
-        scanf("%15[0-9]", &fornecedor.cnpj);
+        scanf("%15[0-9]", fornecedor.cnpj);
         cleanBuff();
     } while(strlen(fornecedor.cnpj) != 14);
 
     printf("Digite o endereco do fornecedor: ");
-    fgets(fornecedor.endereco, str, stdin);
+    scanf("%100[^\n]", fornecedor.endereco);
+    cleanBuff();
 
     do
     {
         printf("Informe o telefone do fornecedor (ddnnnnnnnnn/11 digitos): ");
-        scanf("%12[0-9]", &fornecedor.telefone);
+        scanf("%12[0-9]", fornecedor.telefone);
         cleanBuff();
     } while(strlen(fornecedor.telefone) != 11);
 
     printf("Digite o email do fornecedor: ");
-    fgets(fornecedor.email, str, stdin);
+    scanf("%100[^\n]", fornecedor.email);
+    cleanBuff();
 
-    if(checkInfo())
+    if(checkInfo() == SUCCESS)
     {
         FILE *p;
-        p = fopen("Saves\\fornecedores.bin", "ab+");//abre para modo de append
+        char caminho[255];
+        strcpy(caminho, caminhoLog("fornecedores"));
+
+        p = fopen(caminho, "ab+");//abre para modo de append
         if(p == NULL)
         {
-        printf("Erro ao salvar informacoes!\n");
-        return 0;
+            return EOPEN;
         }
-        fwrite(&fornecedor, sizeof(fornecedor), 1, p);
+
+        if(verForn(-1, fornecedor.cnpj) == SUCCESS)//verifica se ja existe um fornecedor com esse cnpj
+        {
+            fclose(p);
+            return AEXIST;
+        }
+
+        if(tamanhoArq(caminho) == 0)//checa se o arquivo esta vazio
+        {
+            fornecedor.codigo = 1;
+        }else
+        {
+            fseek(p, -sizeof(tipoFornecedores), SEEK_END);//vai para a penultima posicao do arquivo
+            fread(&aux, sizeof(tipoFornecedores), 1, p);
+            aux.codigo++;//atualiza o codigo de acordo com o codigo anterior
+            fornecedor.codigo = aux.codigo;//atualiza o proximo codigo a ser cadastrado
+        }
+
+        fwrite(&fornecedor, sizeof(tipoFornecedores), 1, p);
         fclose(p);
-        return 1;//dados salvos
+        return SUCCESS;
     }
     else{
-        return -1;//cancela
+        return CANCELED;
     }
-    return 0;
 }
 
-int verFor()//função para verificar se esse fornecedor ja existe
+int verForn(int num, char *cnpj)//CONCLUIDO
 {
-    
+    FILE *p;
+    tipoFornecedores aux;
+    char caminho[255];
+    strcpy(caminho, caminhoLog("fornecedores"));
 
+    p = fopen(caminho, "rb");
+    if(p == NULL)
+    {
+        return EOPEN;
+    }
+
+    while(!feof(p))
+    {
+        if(!feof(p))
+        {
+            fread(&aux, sizeof(tipoFornecedores), 1, p);
+
+            if(aux.codigo == num || strcmp(aux.cnpj, cnpj) == 0)
+                return SUCCESS;
+        }
+    }
+    return FAILED;
+}
+
+int lista(int tipo)//CONCLUIDO
+{
+    FILE *p;
+    char caminho[255];
+    int tamanho;
+    strcpy(caminho, caminhoLog("fornecedores"));
+
+    switch (tipo)
+    {
+        case 0: strcpy(caminho, caminhoLog("produtos"));break;
+        
+        case 1: strcpy(caminho, caminhoLog("fornecedores"));break;
+    }
+
+    if(tamanhoArq(caminho) == 0)
+    {
+        return UNEXIST;
+    }
+
+    p = fopen(caminho, "rb");
+    if(p == NULL)
+        return EOPEN;
+
+    tipoFornecedores aux;
+    tipoProdutos prod;
+
+    while(!feof(p))//le ate que seja o fim do arquivo
+    {
+        if(tipo == 0)
+        {
+            fread(&prod, sizeof(tipoProdutos), 1, p);
+            if(feof(p))
+                break;
+            printf("Descricao: %s, Quantia no estoque: %d, Preco de venda: %.2f, Codigo: %d", prod.desc, prod.estoque, prod.pVenda, prod.codigo);
+        }
+        else 
+        if(tipo == 1)
+        {
+            fread(&aux, sizeof(tipoFornecedores), 1, p);
+            if(feof(p))//se ele já leu o fim do arquivo entao para
+                break;
+            printf("Nome: %s, cnpj: %s, codigo: %d\n", aux.nome, aux.cnpj, aux.codigo);
+        }
+    }
+    fclose(p);
+    return SUCCESS;
+}
+
+float calc(float pcusto, float frete, float imposto, float lucro, float quantidade)//CONCLUIDO
+{
+    float total;
+    frete = frete/quantidade;
+    imposto = imposto/quantidade;
+    total = pcusto + frete + imposto;
+    lucro *= total;
+    total += lucro;
+    return total;
 }

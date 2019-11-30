@@ -19,6 +19,7 @@
     #define AEXIST -4 // quando a informação já existir
     #define CANCELED -5//quando o usuario cancelar a operação
 
+
     /*
         TIPOS DE VARIAVEIS NESCESSARIAS
     */
@@ -57,9 +58,17 @@
    }tipoQuantidade;
 
 
+    typedef struct
+    {
+        char dirPadrao[255];
+        float lucr;
+    }tipoPadrao;
+
     /*
         variaveis importantes globais (serao inicializadas com o inicio do programa)
     */
 
-    char dirPadrao[255];
+    
+    tipoPadrao padrao;
+   
 #endif

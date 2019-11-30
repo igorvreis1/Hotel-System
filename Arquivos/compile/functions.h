@@ -13,7 +13,7 @@
     /*
         logar: Utilizada para fazer login de usuarios.
         Espera como parametro o tipo de usuario (cliente, funcionario ou administrador)
-        retorna 1 caso o login seja feito;
+        retorna SUCCES caso o login seja feito;
         Erros: EOPEN -> erro ao abrir o arquivo, FAILED -> senha incorreta, UNEXIST -> usuario nao existe
     */
     int logar(char *tipo);
@@ -73,4 +73,13 @@
     */
     char *caminhoLog(char *tipo);
 
+    /*
+        
+    */
+    int tamanhoArq(char* nome);
+
+    /*
+
+    */
+    int pegaCod(int tipo);
 #endif

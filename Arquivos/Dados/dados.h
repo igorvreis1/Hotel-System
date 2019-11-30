@@ -2,6 +2,7 @@
 #define _DADOS_H_
 
 #include "vars.h"
+
     /*
      TIPOS DE VARIAVEIS NECESSÁRIAS
     */
@@ -55,11 +56,14 @@
     typedef struct
     {
         unsigned int codigo;
+        unsigned int codForn;
         char desc[str];
+        float frete;
         int estoque;
         int estMin;
         float pCusto;
         float pVenda;
+        int imposto;
     }tipoProdutos;
 
     //fornecedores
@@ -67,9 +71,9 @@
     {
         unsigned int codigo;
         char nome[str];//social
+        char insc[nums];
         char razao[str];//nome comercial
-        char insc[13];
-        char cnpj[14];
+        char cnpj[nums];
         char endereco[str];
         char telefone[nums];
         char email[str];
@@ -107,4 +111,26 @@
     */
     int fornecedores();
 
+    /*
+        verForn: Função que verifica se um fornecedor existe pelo codigo
+        espera como parametro o codigo do fornecedor e o cnpj ou um dos dois (preencher com NULL o outro com null
+        quando for apenas um);
+        retorna SUCCESS caso exista e FAILED caso nao exista
+    */
+    int verForn(int num, char *cnpj);
+
+    /*
+        lista: Lista todos os dados de certa categoria, espera como parametro 
+        (0 para produto, 1 para fornecedor)
+        retorna SUCCESS em caso de sucesso, EOPEN em caso de erro de abertura do arquivo ou
+        UNEXIST em caso de não haver dados cadastrados
+    */
+    int lista(int tipo);
+
+    /*
+        calc: Calculo o preço de venda de um produto, espera como parametro 
+        o preco de custo, o frete total, o imposto total, o lucro, quantidade
+        retorna o preco de venda
+    */
+   float calc(float pcusto, float frete, float imposto, float lucro, float quantidade);
 #endif

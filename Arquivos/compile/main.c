@@ -8,10 +8,10 @@
  int main(void)//editar hotel
 { 
   
-  inicializa();
-  if(logar("cliente") == SUCCESS)
-  {
-      printf("Logado com sucesso!");
-  }
-  getchar();
+    inicializa();
+    alteraDir();
+    printf("%s", padrao.dirPadrao);
+    cadastrar("cliente");
+
+    getchar();
 }
