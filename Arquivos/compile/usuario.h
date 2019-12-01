@@ -20,7 +20,7 @@
     /*
     
     */
-    void statuslog(int logged);
+    void statuslog(int logged, int nivel);
     
     /*
 

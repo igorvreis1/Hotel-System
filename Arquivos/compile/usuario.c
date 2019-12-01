@@ -23,7 +23,7 @@ void cliente()//
 
             if( op == 1 )
             {
-                statuslog(logar("cliente"));
+                statuslog(logar("cliente"), 1);
                 if( padrao.logado == 1)
                     break;
             }else
@@ -60,7 +60,7 @@ void funcionario()
 
             if( op == 1)
             {
-                statuslog(logar("funcionario"));
+                statuslog(logar("funcionario"), 2);
             }else
             if( op == 2)
             {
@@ -79,12 +79,12 @@ void adm()
 
 }
 
-void statuslog(int logged)//CONCLUIDO
+void statuslog(int logged, int nivel)//CONCLUIDO
 {
     if( logged == SUCCESS )
     {
         printf("Logado com Sucesso!\n");
-        padrao.logado = 1;
+        padrao.logado = nivel;
     }else
     if( logged == FAILED)
     {

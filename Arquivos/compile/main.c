@@ -37,7 +37,7 @@
 
         if(op == 1)
         {
-            while(1)
+            while(padrao.logado == 0)//caso ele esteja deslogado
             { 
                 menu("[1] - Sou funcionario\t[2] - Sou Cliente\t[3] - Sou administrador\t[4] - Voltar\n");
                 scanop;
@@ -66,10 +66,21 @@
                 }
             }
 
+            if(padrao.logado == 1)//caso seja cliente
+            {
+
+            }else
+            if(padrao.logado == 2)//caso seja funcionario
+            {
+
+            }else//caso seja administrador
+            {
+
+            }
         }else
         if(op == 2)
         {
-
+            
         }else
         if(op == 3)
         {
