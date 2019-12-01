@@ -69,7 +69,7 @@ int hotel(void)//CONCLUIDO
 
     if(checkInfo() == SUCCESS)
     {
-        FILE *p = fopen(caminhoLog("hotel"), "wb");
+        FILE *p = fopen("C:\\ProgramData\\hotelSystem\\configs\\hotel.bin", "wb");
         if(p == NULL)
         {
             return EOPEN;
@@ -77,7 +77,6 @@ int hotel(void)//CONCLUIDO
 
         fwrite(&hotel, sizeof(tipoHotel), 1, p);
         fclose(p);
-        printf("Informacoes salvas em: %s", caminhoLog("hotel"));
         return SUCCESS;
     }
     else
@@ -283,19 +282,12 @@ int verForn(int num, char *cnpj)//CONCLUIDO
     return FAILED;
 }
 
-int lista(int tipo)//CONCLUIDO
+int lista(char *tipo)//CONCLUIDO
 {
     FILE *p;
     char caminho[255];
     int tamanho;
-    strcpy(caminho, caminhoLog("fornecedores"));
-
-    switch (tipo)
-    {
-        case 0: strcpy(caminho, caminhoLog("produtos"));break;
-        
-        case 1: strcpy(caminho, caminhoLog("fornecedores"));break;
-    }
+    strcpy(caminho, caminhoLog(tipo));
 
     if(tamanhoArq(caminho) == 0)
     {
@@ -311,7 +303,7 @@ int lista(int tipo)//CONCLUIDO
 
     while(!feof(p))//le ate que seja o fim do arquivo
     {
-        if(tipo == 0)
+        if( strcmp(tipo, "produtos") == 0)
         {
             fread(&prod, sizeof(tipoProdutos), 1, p);
             if(feof(p))
@@ -319,7 +311,7 @@ int lista(int tipo)//CONCLUIDO
             printf("Descricao: %s, Quantia no estoque: %d, Preco de venda: %.2f, Codigo: %d", prod.desc, prod.estoque, prod.pVenda, prod.codigo);
         }
         else 
-        if(tipo == 1)
+        if(strcmp(tipo, "fornecedores") == 0)
         {
             fread(&aux, sizeof(tipoFornecedores), 1, p);
             if(feof(p))//se ele já leu o fim do arquivo entao para
@@ -340,4 +332,23 @@ float calc(float pcusto, float frete, float imposto, float lucro, float quantida
     lucro *= total;
     total += lucro;
     return total;
+}
+
+void infotel()
+{
+    FILE *p = fopen("C:\\ProgramData\\hotelSystem\\configs\\hotel.bin", "rb");
+    if( p == NULL )
+    {
+        printf("Erro ao ler os dados do hotel\n");
+        return;
+    }
+    tipoHotel hotel;
+    fread(&hotel, sizeof(tipoHotel), 1, p);
+    fclose(p);
+
+    printf("Nome: %s\tRazao: %s\t", hotel.nome, hotel.razao);
+    printf("Horario de checkin: %s as %s horas\n", hotel.checkin.inicio, hotel.checkin.termino);
+    printf("Inscricao estadual: %s\tEndereco: %s\n", hotel.insc, hotel.endereco);
+    printf("Telefone: %s\tCnpj: %s\tEmail: %s\n", hotel.telefone, hotel.cnpj, hotel.email);
+    printf("O horario de checkout maximo e: %s horas\n", hotel.checkout);
 }

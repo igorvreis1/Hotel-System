@@ -122,11 +122,11 @@
 
     /*
         lista: Lista todos os dados de certa categoria, espera como parametro 
-        (0 para produto, 1 para fornecedor)
+        (o tipo, ex: produto)
         retorna SUCCESS em caso de sucesso, EOPEN em caso de erro de abertura do arquivo ou
         UNEXIST em caso de não haver dados cadastrados
     */
-    int lista(int tipo);
+    int lista(char *tipo);
 
     /*
         calc: Calculo o preço de venda de um produto, espera como parametro 

@@ -6,12 +6,6 @@
 #include "vars.h"
 #include "usuario.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-    #define cleanscr system("cls");
-#elif defined(__linux__) || defined(__unix__)
-    #define cleanscr system("clear");
-#endif
-
 #define scanop scanf("%d", &op);
 
  int main(void)//editar hotel
@@ -75,12 +69,23 @@
 
             }else//caso seja administrador
             {
-
+                
             }
         }else
         if(op == 2)
         {
-            
+            menu("[1] - Listar informacoes\t[2] - Alterar informacoes\t[3] - Voltar");
+            scanop;
+            cleanBuff();
+
+            if( op == 1 )
+            {
+                
+            }else
+            if( op == 2)
+            {
+
+            }
         }else
         if(op == 3)
         {

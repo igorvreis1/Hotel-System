@@ -5,6 +5,7 @@
         CONSTANTES NECESSARIAS
     */
     #define raiz "C:\\ProgramData\\hotelSystem\\" // raiz principal do programa
+    #define cfg "C:\\ProgramData\\hotelSystem\\configs\\" //diretorio de configurações
     #define nums 15//telefone 11 - cnpj 14 - insc 13
     #define str 100
     #define lstr 255
@@ -64,6 +65,7 @@
         float lucr;
         int logado; //1 para cliente, 2 para funcionario, 3 para administrador, 0 para deslogado
         char usuario[8];//o nome do usuario logado
+        int codlog;//codigo do usuario logado
     }tipoPadrao;
 
     /*

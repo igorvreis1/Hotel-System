@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <ctype.h>  //toupper
 #include <string.h> //tratamento de strings
-
 #include "dados.h"
 
 #include <sys/stat.h>//diretorios
@@ -24,7 +23,14 @@ int logar(char *tipo)//CONCLUIDO
   tipoLogin log = infoLog(), aux;
 
   char caminho[255];
-  strcpy(caminho, caminhoLog(tipo));//concatena o caminho do save de login
+  if( strcmp(tipo, "administrador") != 0)//se ele nao for adm
+  {
+    strcpy(caminho, caminhoLog(tipo));//concatena o caminho do save de login
+  }else
+  {
+    strcpy(caminho, cfg);//concatena o caminho do save de login
+    strcat(caminho, "administrador.bin");
+  }
 
   FILE *p;
   if ((p = fopen(caminho, "rb")) == NULL)
@@ -92,7 +98,7 @@ int alteraDir()//CONCLUIDO
   cleanBuff();
   
   FILE *p;
-  if((p = fopen("C:\\ProgramData\\hotelSystem\\dirPadrao.txt","w")) == NULL)
+  if((p = fopen("C:\\ProgramData\\hotelSystem\\configs\\dirPadrao.txt","w")) == NULL)
   {
     printf("Erro ao salvar diretorio padrao!\n");
     return EOPEN;
@@ -107,7 +113,7 @@ int alteraDir()//CONCLUIDO
 void pegaDir()//CONCLUIDO
 {
   FILE *p;
-  if((p = fopen("C:\\ProgramData\\hotelSystem\\dirpadrao.txt", "r")) == NULL)
+  if((p = fopen("C:\\ProgramData\\hotelSystem\\configs\\dirpadrao.txt", "r")) == NULL)
   {
     printf("Falha ao obter o diretorio padrao!\n");
     exit(1);
@@ -133,14 +139,53 @@ void inicializa()//CONCLUIDO
   strcpy(caminho, raiz);
   strcat(caminho, "Saves\\");
 
+  mkdir("C:\\ProgramData\\hotelSystem\\configs\\", 0700);//cria o diretorio de configuração padrao
   mkdir(caminho, 0700);//cria o diretorio para os saves do cliente padrao
 
-  if((p = fopen("C:\\ProgramData\\hotelSystem\\dirpadrao.txt", "w")) == NULL)
+  p = fopen("C:\\ProgramData\\hotelSystem\\configs\\dirpadrao.txt", "w");
+  if(p == NULL)
   {
     printf("Falha ao criar diretorios\n");
+    getchar();
     exit(1);
   }
   fprintf(p, "%sSaves\\", raiz);
+  fclose(p);
+
+  p = fopen("C:\\ProgramData\\hotelSystem\\configs\\administrador.bin", "wb");
+  if(p == NULL)
+  {
+    printf("Erro ao iniciar arquivo de administrador!\nEncerrando!");
+    getchar();
+    exit(1);
+  }
+  tipoLogin adm;
+  strcpy(adm.usuario, "Admin123");
+  strcpy(adm.senha, "Admin123");
+  fwrite(&adm, sizeof(tipoLogin), 1, p);//salva o usuario de administrador padrao
+  fclose(p);
+
+  p = fopen("C:\\ProgramData\\hotelSystem\\configs\\hotel.bin", "rb");
+  if(p == NULL)//caso nao existir esse arquivo
+  {
+    while(1){
+      int errcode = hotel();
+      if(errcode == SUCCESS)
+      {
+        printf("Informacoes alteradas com sucesso!\n");
+        break;
+      }else
+      if( errcode == EOPEN)
+      {
+        printf("Erro ao salvar as configuracoes do hotel!\n");
+        exit(1);
+      }else
+      {
+        printf("Voce nao pode deixar de cadastrar o hotel na primeira vez que abre o programa!\n");
+        continue;
+      }
+    }
+  }
   fclose(p);
 
   pegaDir();//pega o diretorio e salva na variavel padrao
@@ -334,7 +379,7 @@ int tamanhoArq(char* nome)//CONCLUIDO
     return size;
 }
 
-int pegaCod(int tipo)
+int pegaCod(char *tipo)
 {
   FILE *p;
   char caminho[255];
@@ -342,11 +387,7 @@ int pegaCod(int tipo)
 
   tipoProdutos aux;
   
-
-  if(tipo == 0)//caso o tipo seja do tipo produto
-  {
-    strcpy(caminho, caminhoLog("produtos"));
-  }
+  strcpy(caminho, caminhoLog(tipo));
 
   if((p = fopen(caminho, "rb")) == NULL)
   {
@@ -359,7 +400,7 @@ int pegaCod(int tipo)
     return cod;
   }
 
-  if(tipo == 0)
+  if(strcmp(tipo, "produtos") == 0)
   {
     fseek(p, -sizeof(tipoProdutos), SEEK_END);//vai para a penultima posiçao
     fread(&aux, sizeof(tipoProdutos), 1, p);

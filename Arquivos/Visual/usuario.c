@@ -61,6 +61,8 @@ void funcionario()
             if( op == 1)
             {
                 statuslog(logar("funcionario"), 2);
+                if( padrao.logado == 2)
+                    break;
             }else
             if( op == 2)
             {
@@ -72,11 +74,32 @@ void funcionario()
             }
         }
     }
+
+    printf("\n\n\n\n\n");
+    printf("Logado como (funcionario): %s\n\n", padrao.usuario);
 }
 
 void adm()
 {
+    int op;
+    while(padrao.logado != 3)
+    {
+        menu("[1] - Logar\t[2] - Voltar");
+        scanf("%d", &op);
+        cleanBuff();
 
+        if( op == 1)
+        {
+            statuslog(logar("administrador"), 3);
+        }else
+        if( op == 2)
+        {
+            break;
+        }else
+        {
+            printf("Opcao invalida!\n");
+        }
+    }
 }
 
 void statuslog(int logged, int nivel)//CONCLUIDO

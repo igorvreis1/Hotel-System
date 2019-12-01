@@ -81,10 +81,10 @@
 
     /*
         pegaCod: pega o código anterior do dado requisitado
-        espera como parametro o tipo (0 - produto, 1 - fornecedor)
+        espera como parametro o tipo (ex: produto, fornecedor, etc)
         retorna: EOPEN em caso de erro e o codigo no caso de sucesso
     */
-    int pegaCod(int tipo);
+    int pegaCod(char *tipo);
 
     /*
         op: Printa um menu, necessita como parametro as opçoes do menu
