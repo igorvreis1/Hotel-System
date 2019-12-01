@@ -67,8 +67,6 @@
     /*
         variaveis importantes globais (serao inicializadas com o inicio do programa)
     */
-
-    
     tipoPadrao padrao;
    
 #endif

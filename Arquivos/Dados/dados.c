@@ -7,66 +7,82 @@
 #include <time.h>
 
 //FUNCOES
-void hotel(void)//CORRIGIR SAVE DE ARQUIVO
+int hotel(void)//CONCLUIDO
 {
     tipoHotel hotel;
 
-    while(1)
+    printf("Informe o nome do Hotel: ");
+    scanf("%100[^\n]", &hotel.nome);
+    cleanBuff();
+
+    printf("Informe a razao social do hotel: ");
+    scanf("%100[^\n]", &hotel.razao);
+    cleanBuff();
+     
+
+    printf("Informe o endereco do hotel: ");
+    scanf("%100[^\n]", &hotel.endereco);
+    cleanBuff();
+
+
+    do{
+        printf("Informe a inscricao estadual do hotel (apenas numeros/13 digitos): ");
+        scanf("%14[0-9]", &hotel.insc);
+        cleanBuff();
+    }while(strlen(hotel.insc) != 13);
+    
+    printf("Informe o email do hotel: ");
+    scanf("%100[^\n]", &hotel.email);
+    cleanBuff();
+
+
+    do
     {
-        printf("Informe o nome do Hotel: ");
-        fgets(hotel.nome, 99, stdin);
+        printf("Informe o cnpj do hotel (apenas numeros/14 digitos): ");
+        scanf("%15[0-9]", &hotel.cnpj);
+        cleanBuff();
+    } while(strlen(hotel.cnpj) != 14);
 
-        printf("Informe a razao social do hotel: ");
-        fgets(hotel.razao, 99, stdin);        
+    do
+    {
+        printf("Informe o telefone do hotel (ddnnnnnnnnn/11 digitos): ");
+        scanf("%12[0-9]", &hotel.telefone);
+        cleanBuff();
+    } while(strlen(hotel.telefone) != 11);
 
-        printf("Informe o endereco do hotel: ");
-        fgets(hotel.endereco, 99, stdin);
+    do{
+        printf("Informe as horas que comecam o checkin (Apenas as horas, ex: 12): ");
+        scanf("%d", &hotel.checkin.inicio);
+    }while(checkHorario(hotel.checkin.inicio, 'h') == FAILED);
+    
+    do{
+        printf("Informe as horas que terminam o horario de checkin (Apenas as horas, ex: 16): ");
+        scanf("%d", &hotel.checkin.termino);
+    }while(checkHorario(hotel.checkin.termino, 'h') == FAILED || hotel.checkin.inicio >= hotel.checkin.termino);
+    
+    do{
+        printf("Informe o horario de checkout do hotel (hh:mm): ");
+        scanf("%d:%d", &hotel.checkout[0], &hotel.checkout[1]);
+        cleanBuff();
+    }while(checkHorario(hotel.checkout[0], 'h') == FAILED || checkHorario(hotel.checkout[1], 'm') == FAILED);
 
-        do{
-            printf("Informe a inscricao estadual do hotel (apenas numeros/13 digitos): ");
-            scanf("%14[0-9]", &hotel.insc);
-            cleanBuff();
-        }while(strlen(hotel.insc) != 13);
-        
-        printf("Informe o email do hotel: ");
-        fgets(hotel.email, 99, stdin);
 
-        do
+    if(checkInfo() == SUCCESS)
+    {
+        FILE *p = fopen(caminhoLog("hotel"), "wb");
+        if(p == NULL)
         {
-            printf("Informe o cnpj do hotel (apenas numeros/14 digitos): ");
-            scanf("%15[0-9]", &hotel.cnpj);
-            cleanBuff();
-        } while(strlen(hotel.cnpj) != 14);
-
-        do
-        {
-            printf("Informe o telefone do hotel (ddnnnnnnnnn/11 digitos): ");
-            scanf("%12[0-9]", &hotel.telefone);
-            cleanBuff();
-        } while(strlen(hotel.telefone) != 11);
-
-        do{
-            printf("Informe as horas que comecam o checkin (Apenas as horas, ex: 12): ");
-            scanf("%d", &hotel.checkin.inicio);
-        }while(checkHorario(hotel.checkin.inicio, 'h'));
-        
-        do{
-            printf("Informe as horas que terminam o horario de checkin (Apenas as horas, ex: 16): ");
-            scanf("%d", &hotel.checkin.termino);
-        }while(checkHorario(hotel.checkin.termino, 'h') || hotel.checkin.inicio >= hotel.checkin.termino);
-        
-        do{
-            printf("Informe o horario de checkout do hotel (hh:mm): ");
-            scanf("%d:%d", &hotel.checkout[0], &hotel.checkout[1]);
-        }while(checkHorario(hotel.checkout[0], 'h') || checkHorario(hotel.checkout[1], 'm'));
-
-
-        if(checkInfo())
-        {
-            //  SALVA NO ARQUIVO
-            printf("Salvo!");
-            break;
+            return EOPEN;
         }
+
+        fwrite(&hotel, sizeof(tipoHotel), 1, p);
+        fclose(p);
+        printf("Informacoes salvas em: %s", caminhoLog("hotel"));
+        return SUCCESS;
+    }
+    else
+    {
+        return CANCELED;
     }
 }
 
@@ -129,12 +145,13 @@ int addProd(void)//CONCLUIDO
 
         fwrite(&adProduto, sizeof(tipoProdutos), 1, p);
         fclose(p);
+        printf("Informacoes salvas em: %s", caminhoLog("produtos"));
         return SUCCESS;
     }else
         return CANCELED;
 }
 
-void gerente(void)//apenas criar função que altera o local de save
+void gerente(void)//CONCLUIDO
 {
     tipoGerente gerente;
 
@@ -152,11 +169,11 @@ void gerente(void)//apenas criar função que altera o local de save
     if(checkInfo())
     {
         FILE *fGerente;
-        fGerente = fopen("..\\Saves\\gerente.txt", "w");
-        fprintf(fGerente, "%s\r\n%s", gerente.nome, gerente.telefone);
+        fGerente = fopen(caminhoLog("gerente"), "wb");
+        fwrite(&gerente, sizeof(tipoGerente), 1, fGerente);
         fclose(fGerente);
 
-        printf("Informacoes salvas em: %s", "Saves\\gerente.txt");//caminho
+        printf("Informacoes salvas em: %s", caminhoLog("gerente"));//caminho
     }
 }
 
@@ -232,6 +249,7 @@ int fornecedores()//CONCLUIDO
 
         fwrite(&fornecedor, sizeof(tipoFornecedores), 1, p);
         fclose(p);
+        printf("Informacoes salvas em: %s", caminhoLog("fornecedores"));
         return SUCCESS;
     }
     else{

@@ -92,9 +92,10 @@
     //Funçoes
 
     /*
-        Hotel: Função utilizada para atualizar ou inserir as informaçoes do hotel e gerente
+        Hotel: Função utilizada para inserir as informações do hotel
+        retorna SUCCESS, EOPEN ou CANCELED
     */
-    void hotel(void);
+    int hotel(void);
 
     /*
         addProd: Função utilizada para adicionar novos produtos ou atualizar

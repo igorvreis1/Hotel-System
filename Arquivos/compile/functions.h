@@ -74,12 +74,15 @@
     char *caminhoLog(char *tipo);
 
     /*
-        
+        tamanhoArq: Pega o tamanho de um arquivo, espera como parametro o caminho do arquivo
+        retorna: EOPEN em caso de erro e o tamanho do arquivo no caso de sucesso
     */
     int tamanhoArq(char* nome);
 
     /*
-
+        pegaCod: pega o código anterior do dado requisitado
+        espera como parametro o tipo (0 - produto, 1 - fornecedor)
+        retorna: EOPEN em caso de erro e o codigo no caso de sucesso
     */
     int pegaCod(int tipo);
 #endif

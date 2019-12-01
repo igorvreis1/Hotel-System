@@ -7,6 +7,5 @@
 */
 
 int cliente()//
-{
-    printf("");
+{   
 }

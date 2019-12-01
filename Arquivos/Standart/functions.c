@@ -86,7 +86,7 @@ int alteraDir()//CONCLUIDO
   printf("Informe o caminho do diretorio que sera padrao \n(coloque uma \\ no final): ");
   scanf("%255[^\n]s", &dir);
   cleanBuff();
-
+  
   FILE *p;
   if((p = fopen("C:\\ProgramData\\hotelSystem\\dirPadrao.txt","w")) == NULL)
   {
@@ -138,8 +138,6 @@ void inicializa()//CONCLUIDO
   }
   fprintf(p, "%sSaves\\", raiz);
   fclose(p);
-
-
 
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
@@ -316,9 +314,9 @@ int checkHorario(int horario, char tipo) //CONCLUIDO
   if (r == 1)
   {
     printf("\nHorario invalido, tente novamente!\n");
-    return SUCCESS;
+    return FAILED;
   }
-  return FAILED;
+  return SUCCESS;
 }
 
 int tamanhoArq(char* nome)//CONCLUIDO

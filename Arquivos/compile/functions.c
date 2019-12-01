@@ -59,16 +59,16 @@ tipoLogin infoLog()//CONCLUIDO
   tipoLogin login;
   do
   {
-    printf("Digite seu nome de usuario (maximo 8 digitos): ");
+    printf("Digite seu nome de usuario (maximo 8 digitos/minimo 4 digitos): ");
     // fgets(login.usuario, user, stdin);
     scanf("%9[^\n]s", &login.usuario);
     cleanBuff();
 
-    printf("\nDigite sua senha (maximo 8 digitos): ");
+    printf("\nDigite sua senha (maximo 8 digitos/minimo 4 digitos): ");
     // fgets(login.senha, user, stdin);
     scanf("%9[^\n]s", &login.senha);
     cleanBuff();
-  } while (strlen(login.usuario) > 8 || strlen(login.senha) > 8);
+  } while (strlen(login.usuario) > 8 || strlen(login.senha) > 8 || strlen(login.usuario) < 4 || strlen(login.senha) < 4);
 
   return login;
 }
@@ -85,7 +85,8 @@ int alteraDir()//CONCLUIDO
 
   printf("Informe o caminho do diretorio que sera padrao \n(coloque uma \\ no final): ");
   scanf("%255[^\n]s", &dir);
-
+  cleanBuff();
+  
   FILE *p;
   if((p = fopen("C:\\ProgramData\\hotelSystem\\dirPadrao.txt","w")) == NULL)
   {
@@ -137,8 +138,6 @@ void inicializa()//CONCLUIDO
   }
   fprintf(p, "%sSaves\\", raiz);
   fclose(p);
-
-
 
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
@@ -315,9 +314,9 @@ int checkHorario(int horario, char tipo) //CONCLUIDO
   if (r == 1)
   {
     printf("\nHorario invalido, tente novamente!\n");
-    return SUCCESS;
+    return FAILED;
   }
-  return FAILED;
+  return SUCCESS;
 }
 
 int tamanhoArq(char* nome)//CONCLUIDO
@@ -325,7 +324,7 @@ int tamanhoArq(char* nome)//CONCLUIDO
     FILE *file = fopen(nome, "r");
 
     if(file == NULL)
-        return 0;
+        return EOPEN;
 
     fseek(file, 0, SEEK_END);
     int size = ftell(file);
