@@ -85,4 +85,9 @@
         retorna: EOPEN em caso de erro e o codigo no caso de sucesso
     */
     int pegaCod(int tipo);
+
+    /*
+        op: Printa um menu, necessita como parametro as opçoes do menu
+    */
+    void menu(char *menu);
 #endif

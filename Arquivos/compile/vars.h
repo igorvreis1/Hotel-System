@@ -62,6 +62,8 @@
     {
         char dirPadrao[255];
         float lucr;
+        int logado; //1 para logado, 0 para deslogado
+        char usuario[8];//o nome do usuario logado
     }tipoPadrao;
 
     /*

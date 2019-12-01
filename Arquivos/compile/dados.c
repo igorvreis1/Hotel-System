@@ -1,7 +1,7 @@
 #include "dados.h"
 #include "functions.h"
 #include "vars.h"
-#include<stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <time.h>

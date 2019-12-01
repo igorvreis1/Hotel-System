@@ -43,9 +43,12 @@ int logar(char *tipo)//CONCLUIDO
         //passa para o check da senha
         if(strcmp(aux.senha, log.senha) == 0)//caso a senha digitada esteja correta
         {
+          strcpy(padrao.usuario, log.usuario);//copia o nome  do usuario logado
+          padrao.logado = 1;
           return SUCCESS;
         }else
         {
+          padrao.logado = 0;
           return FAILED;
         }
       }
@@ -68,6 +71,7 @@ tipoLogin infoLog()//CONCLUIDO
     // fgets(login.senha, user, stdin);
     scanf("%9[^\n]s", &login.senha);
     cleanBuff();
+    printf("\n");
   } while (strlen(login.usuario) > 8 || strlen(login.senha) > 8 || strlen(login.usuario) < 4 || strlen(login.senha) < 4);
 
   return login;
@@ -153,8 +157,6 @@ int cadastrar(char *tipo)//CONCLUIDO
   FILE *p;
   if((p = fopen(caminho, "ab+")) == NULL)
   {
-    printf("Erro ao criar arquivo de cadastro!\n");
-    printf("Verifique se o caminho para salvar os dados esta correto!\n");
     return EOPEN;
   }
 
@@ -166,7 +168,6 @@ int cadastrar(char *tipo)//CONCLUIDO
       fread(&aux, sizeof(tipoLogin), 1, p);
       if ((strcmp(aux.usuario, log.usuario)) == 0)
       {
-        printf("Esse usuario ja existe, tente outro!\n");
         return AEXIST;
       }
       contador++;
@@ -190,7 +191,7 @@ int cadastrar(char *tipo)//CONCLUIDO
     fwrite(&log, sizeof(tipoLogin), 1, p);
     fclose(p);
 
-    printf("Usuario cadastrado com sucesso!\nUsuario: %s Senha: %s Codigo: %d\n", log.usuario, log.senha, log.codigo);
+    printf("Usuario: %s Senha: %s Codigo: %d\n", log.usuario, log.senha, log.codigo);
     return SUCCESS;
 }
 
@@ -368,4 +369,11 @@ int pegaCod(int tipo)
 
   fclose(p);
   return cod;
+}
+
+void menu(char *menu)
+{
+  printf("Escolha uma opcao: \n\n");
+  printf("%s\n", menu);
+  printf("Opcao: ");
 }
