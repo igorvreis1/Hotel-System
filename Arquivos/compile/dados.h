@@ -1,6 +1,7 @@
 #ifndef _DADOS_H_
 #define _DADOS_H_
 
+<<<<<<< HEAD
     /*
         CONSTANTES NECESSARIAS
     */
@@ -9,6 +10,9 @@
    #define lstr 255
    #define modulos 1 //quantidade de modulos que o programa tem
    #define user 10 //quantidade de digitos do login (máximo 8) +1 \n
+=======
+#include "vars.h"
+>>>>>>> upstream/master
 
     /*
      TIPOS DE VARIAVEIS NECESSÁRIAS
@@ -31,7 +35,10 @@
 
         int checkout[2];
        float lucro;
+<<<<<<< HEAD
     //    int *qReservados; falta
+=======
+>>>>>>> upstream/master
    }tipoHotel;
 
     //gerente
@@ -41,6 +48,7 @@
         char telefone[nums];
     }tipoGerente;
 
+<<<<<<< HEAD
    //Hóspedes
    typedef struct
    {
@@ -55,10 +63,13 @@
     int datNas[3];// DD/MM/AAAA
    }tipoHospedes;
 
+=======
+>>>>>>> upstream/master
     //Acomodações
     typedef struct
     {
         unsigned int codigo; //numero do quarto
+<<<<<<< HEAD
         char desc[lstr];
         char facilidade[lstr];
         int categoria[2]; //1 digito == classe / 2 digito == tamanho
@@ -74,17 +85,35 @@
         int tamanho; //1 - 1 pessoa / 2 - casal / 3 familia
         char tipo; //luxo, simples, normal
     }tipoCategoria;
+=======
+        int categoria;
+        int tamanho;
+        float valor;
+        char desc[lstr];
+        char facilidade[lstr];
+    }tipoQuartos;
+>>>>>>> upstream/master
 
     //produtos
     typedef struct
     {
         unsigned int codigo;
+<<<<<<< HEAD
         char desc[str];
+=======
+        unsigned int codForn;
+        char desc[str];
+        float frete;
+>>>>>>> upstream/master
         int estoque;
         int estMin;
         float pCusto;
         float pVenda;
+<<<<<<< HEAD
         char *produtos;//ATENÇÃO
+=======
+        int imposto;
+>>>>>>> upstream/master
     }tipoProdutos;
 
     //fornecedores
@@ -92,9 +121,15 @@
     {
         unsigned int codigo;
         char nome[str];//social
+<<<<<<< HEAD
         char razao[str];//nome comercial
         int insc[13];
         char cnpj[14];
+=======
+        char insc[nums];
+        char razao[str];//nome comercial
+        char cnpj[nums];
+>>>>>>> upstream/master
         char endereco[str];
         char telefone[nums];
         char email[str];
@@ -110,6 +145,7 @@
         char perm[modulos]; //- -> sem acesso / + -> acesso
     }tipoFuncionarios;
     
+<<<<<<< HEAD
     //Funçoes
 
     /*
@@ -117,12 +153,45 @@
     */
     void hotel(void);
 
+=======
+    typedef struct
+    {
+        int codProd;
+        int quant;
+    }tipoEstoque;
+    
+
+    typedef struct 
+    {
+        char nomeProduto[str];
+        int qntProd;
+        int codProd;
+        float total;
+        float totalFrete;
+        float totalProduto;
+        float totalImposto;
+    }tipoNota;
+    
+    //Funçoes
+
+    /*
+        Hotel: Função utilizada para inserir as informações do hotel
+        retorna SUCCESS, EOPEN ou CANCELED
+    */
+    int hotel(void);
+
+    /*
+
+    */
+    void infotel();
+>>>>>>> upstream/master
     /*
         addProd: Função utilizada para adicionar novos produtos ou atualizar
     */
     int addProd(void);
 
     /*
+<<<<<<< HEAD
         checkInfo: Função que checa se as informações estão corretas
         retorna 1 caso estejam
     */
@@ -145,4 +214,48 @@
     */
    int checkHorario(int horario, char tipo);
 
+=======
+        gerente: Função que atualiza ou insere informações sobre o gerente
+        retorna SUCCES, EOPEN OU CANCELED
+    */
+    int gerente(void);
+
+    /*
+        fornecedores: Função que atualiza ou insere informações sobre os fornecedores
+    */
+    int fornecedores();
+
+    /*
+        verForn: Função que verifica se um fornecedor existe pelo codigo
+        espera como parametro o codigo do fornecedor e o cnpj ou um dos dois (preencher com NULL o outro com null
+        quando for apenas um);
+        retorna SUCCESS caso exista e FAILED caso nao exista
+    */
+    int verForn(int num, char *cnpj);
+
+    /*
+        lista: Lista todos os dados de certa categoria, espera como parametro 
+        (o tipo, ex: produto)
+        retorna SUCCESS em caso de sucesso, EOPEN em caso de erro de abertura do arquivo ou
+        UNEXIST em caso de não haver dados cadastrados
+    */
+    int lista(char *tipo);
+
+    /*
+        calc: Calculo o preço de venda de um produto, espera como parametro 
+        o preco de custo, o frete total, o imposto total, o lucro, quantidade
+        retorna o preco de venda
+    */
+   float calc(float pcusto, float frete, float imposto, float lucro, float quantidade);
+
+    /*
+
+    */
+   int calcEstoque(int cod);
+
+   /*
+   
+   */
+    int addQuarto();
+>>>>>>> upstream/master
 #endif
