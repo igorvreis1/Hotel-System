@@ -138,7 +138,7 @@ void menuFunc()
         {
             while(1)
             {
-                menu("[1] - Listar\t[2] - Adicionar existente\t[3] - Adicionar novo\t[4] - remover\t [5] - Voltar\n");
+                menu("[1] - Listar\t[2] - Adicionar de um fornecedor existente\n[3] - Adicionar de um novo fornecedor\t[4] - remover\t [5] - Voltar\n");
                 scanop;
                 cleanBuff();
 
@@ -162,6 +162,9 @@ void menuFunc()
                     if(errcode == EOPEN)
                     {
                         printf("Erro ao abrir arquivo\n");
+                    }else
+                    {
+                        printf("O fornecedor informado nao existe!\n");
                     }
                 }else
                 if( op == 3)
