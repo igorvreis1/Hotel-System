@@ -7,6 +7,7 @@
 
 // escolhe um quarto
 int quartos();
+int cancel();
 
 
 
