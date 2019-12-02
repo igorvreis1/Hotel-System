@@ -12,6 +12,9 @@
     #define modulos 1 //quantidade de modulos que o programa tem
     #define user 10 //quantidade de digitos do login (máximo 8) +1 \n
 
+    //macro
+    #define scanop scanf("%d", &op);
+    #define opIn printf("Opcao invalida!\n");
 
     #define SUCCESS 1//quando a operação for concluida
     #define FAILED -1//quando ocorrer falha na operação (exemplo uma senha incorreta)
@@ -44,6 +47,7 @@
     char sexo; //M - masculino; F - feminino
     char estCiv;//C - casado; S - solteiro; D - divorciado; V - viúvo
     int datNas[3];// DD/MM/AAAA
+    int myRes;
    }tipoHospedes;
 
 
@@ -65,7 +69,7 @@
         float lucr;
         int logado; //1 para cliente, 2 para funcionario, 3 para administrador, 0 para deslogado
         char usuario[8];//o nome do usuario logado
-        int codlog;//codigo do usuario logado
+        int cod;//codigo do usuario logado
     }tipoPadrao;
 
     /*

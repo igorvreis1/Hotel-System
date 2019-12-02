@@ -6,9 +6,7 @@
 #include "vars.h"
 #include "usuario.h"
 
-#define scanop scanf("%d", &op);
-
- int main(void)//editar hotel
+int main(void)//editar hotel
 { 
     inicializa();
     int op;
@@ -66,30 +64,112 @@
             }else
             if(padrao.logado == 2)//caso seja funcionario
             {
-
-            }else//caso seja administrador
+                menuFunc();
+            }else
+            if(padrao.logado == 3)//caso seja administrador
             {
-                
+                menuAdm();
             }
         }else
         if(op == 2)
         {
-            menu("[1] - Listar informacoes\t[2] - Alterar informacoes\t[3] - Voltar");
-            scanop;
-            cleanBuff();
-
-            if( op == 1 )
+            while(1)
             {
-                
-            }else
-            if( op == 2)
-            {
+                menu("[1] - Listar informacoes\t[2] - Alterar informacoes\t[3] - Voltar");
+                scanop;
+                cleanBuff();
 
+                if( op == 1 )
+                {
+                    printf("\n\n");
+                    infotel();
+                    printf("\nPressione enter para prosseguir!\n\n");
+                    getchar();
+                }else
+                if( op == 2)
+                {
+                    if(padrao.logado != 3)
+                    {
+                        printf("Voce deve ser um administrador para poder alterar as informacoes do hotel!\n");
+                        break;
+                    }
+
+                    int errcode = hotel();
+                    if( errcode == SUCCESS )
+                    {
+                        printf("Alteracoes salvas com sucesso!\n");
+                        break;
+                    }else
+                    if( errcode == EOPEN )
+                    {
+                        printf("Erro ao salvar as alteracoes!\n");
+                        break;
+                    }else
+                    {
+                        printf("Operacao cancelada! Nenhuma alteracao foi salva!\n");
+                        break;
+                    }
+                }else
+                if(op == 3)
+                {
+                    break;
+                }else
+                {
+                    printf("Opcao invalida!\n\n");
+                }
             }
         }else
         if(op == 3)
         {
+            while(1)
+            {
+                menu("[1] - Listar informacoes\t[2] - Alterar informacoes\t[3] - Voltar");
+                scanop;
+                cleanBuff();
 
+                if( op == 1)
+                {
+                    tipoGerente aux;
+                    FILE *p = fopen("C:\\ProgramData\\hotelSystem\\configs\\gerente.bin", "rb");
+                    fread(&aux, sizeof(tipoGerente), 1, p);
+                    fclose(p);
+
+                    printf("Nome do gerente: %s\nTelefone: %s\n\n", aux.nome, aux.telefone);
+                    printf("Pressione enter para prosseguir!\n");
+                    getchar();
+                }else
+                if( op == 2)
+                {
+                    if(padrao.logado != 3)//caso ele nao seja adm
+                    {
+                        printf("Voce deve ser administrador para poder editar as informacoes sobre o gerente!\n");
+                        break;
+                    }
+
+                    int errcode = gerente();
+                    if(errcode == SUCCESS )
+                    {
+                        printf("Alteracoes feitas com sucesso!\n");
+                        break;
+                    }else
+                    if( errcode == EOPEN )
+                    {
+                        printf("Erro ao salvar as informacoes!\n");
+                        break;
+                    }else
+                    {
+                        printf("Operacao cancelada, nenhuma alteracao foi salva!\n");
+                        break;
+                    }
+                }else 
+                if( op == 3)
+                {
+                    break;
+                }else
+                {
+                    printf("Opcao invalida\n");
+                }
+            }
         }else
         if(op == 4)
         {

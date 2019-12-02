@@ -182,11 +182,53 @@ void inicializa()//CONCLUIDO
       }else
       {
         printf("Voce nao pode deixar de cadastrar o hotel na primeira vez que abre o programa!\n");
-        continue;
       }
     }
   }
   fclose(p);
+  printf("\n\n\n");
+  while(1)
+  {
+    int errcode = gerente();
+
+    if( errcode == CANCELED)
+    {
+      printf("Voce nao pode cancelar a atualizacao do gerente na primeira abertura do programa!\n");
+    }else
+    if( errcode == SUCCESS )
+    {
+      printf("Gerente atualizado com sucesso!\n");
+      break;
+    }else
+    {
+      printf("Erro ao abrir arquivo de configuracao do gerente!\nSaindo...");
+      getchar();
+      exit(1);
+    }
+  }
+
+  int op;
+  printf("\n\nDeseja alterar o diretorio padrao de saves\n[1] - sim\t[2] - nao\n");
+  printf("Diretorio padrao: %s\nOpcao: ", padrao.dirPadrao);
+  scanf("%d", &op);
+
+  if(op == 1)
+  {
+    if(alteraDir() == CANCELED)
+    {
+      printf("Operacao cancelada!\n");
+    }
+  }
+
+  printf("E necessario adicionar ao menos um quarto na primeira inicializacao: ");
+  int errcode = addQuarto();
+  if( errcode == CANCELED || EOPEN)
+  {
+    printf("Ocorreu um erro... Tudo bem, voce pode adiciona-los manualmente depois");
+  }else
+  {
+    printf("Quarto adicionado com sucesso!\n");
+  }
 
   pegaDir();//pega o diretorio e salva na variavel padrao
 }
@@ -382,19 +424,17 @@ int tamanhoArq(char* nome)//CONCLUIDO
 int pegaCod(char *tipo)
 {
   FILE *p;
-  char caminho[255];
   int cod = 0;
 
   tipoProdutos aux;
   
-  strcpy(caminho, caminhoLog(tipo));
 
-  if((p = fopen(caminho, "rb")) == NULL)
+  if((p = fopen(caminhoLog(tipo), "rb")) == NULL)
   {
     return EOPEN;
   }
 
-  if(tamanhoArq(caminho) == 0)//caso o arquivo esteja vazio
+  if(tamanhoArq(caminhoLog(tipo)) == 0)//caso o arquivo esteja vazio
   {
     cod = 1;
     return cod;

@@ -37,20 +37,12 @@
     typedef struct
     {
         unsigned int codigo; //numero do quarto
+        int categoria;
+        int tamanho;
+        float valor;
         char desc[lstr];
         char facilidade[lstr];
-        int categoria[2]; //1 digito == classe / 2 digito == tamanho
     }tipoQuartos;
-   
-    //Categorias
-    typedef struct // Player Solo, luxo casal, luxo familia, normal simples, normal casal, normal familia
-    {
-        unsigned int codigo[2]; //1 digito -> classe / 2 digito -> tamanho
-        char desc[str];
-        float valor;
-        int tamanho; //1 - 1 pessoa / 2 - casal / 3 familia
-        char tipo; //luxo, simples, normal
-    }tipoCategoria;
 
     //produtos
     typedef struct
@@ -89,6 +81,24 @@
         char perm[modulos]; //- -> sem acesso / + -> acesso
     }tipoFuncionarios;
     
+    typedef struct
+    {
+        int codProd;
+        int quant;
+    }tipoEstoque;
+    
+
+    typedef struct 
+    {
+        char nomeProduto[str];
+        int qntProd;
+        int codProd;
+        float total;
+        float totalFrete;
+        float totalProduto;
+        float totalImposto;
+    }tipoNota;
+    
     //Funçoes
 
     /*
@@ -98,14 +108,19 @@
     int hotel(void);
 
     /*
+
+    */
+    void infotel();
+    /*
         addProd: Função utilizada para adicionar novos produtos ou atualizar
     */
     int addProd(void);
 
     /*
         gerente: Função que atualiza ou insere informações sobre o gerente
+        retorna SUCCES, EOPEN OU CANCELED
     */
-    void gerente(void);
+    int gerente(void);
 
     /*
         fornecedores: Função que atualiza ou insere informações sobre os fornecedores
@@ -134,4 +149,14 @@
         retorna o preco de venda
     */
    float calc(float pcusto, float frete, float imposto, float lucro, float quantidade);
+
+    /*
+
+    */
+   int calcEstoque(int cod);
+
+   /*
+   
+   */
+    int addQuarto();
 #endif

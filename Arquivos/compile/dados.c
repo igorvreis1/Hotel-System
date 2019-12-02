@@ -94,7 +94,8 @@ int addProd(void)//CONCLUIDO
     scanf("%d", &adProduto.codForn);
     cleanBuff();
 
-    if((verForn(adProduto.codForn, "a")) == FAILED)//verifica pelo codigo se o fornecedor existe
+    int error = verForn(adProduto.codForn, "a");
+    if(error == FAILED || error == EOPEN)//verifica pelo codigo se o fornecedor existe
     {
         return UNEXIST;
     }
@@ -130,32 +131,46 @@ int addProd(void)//CONCLUIDO
 
     if(checkInfo() == SUCCESS)
     {   
-        FILE *p;
-        char caminho[255];
-        strcpy(caminho, caminhoLog("produtos"));//concatena o caminho de save para produtos
+        FILE *p, *j;
 
-        if((p = fopen(caminho,"ab+")) == NULL)
+        if((p = fopen(caminhoLog("produtos"),"ab+")) == NULL)
         {
             return EOPEN;
         }
         
         adProduto.estoque = quantidade;
-        adProduto.codigo = pegaCod(0);//pega o codigo do produto
+        adProduto.codigo = pegaCod("produtos");//pega o codigo do produto
+
+        j = fopen(caminhoLog("nota"), "ab+");
+        if (j == NULL)
+        {
+            printf("Erro ao abrir a nota!\n");
+            return EOPEN;
+        }
+
+        tipoNota nota;
+        nota.totalProduto = adProduto.frete + adProduto.imposto + adProduto.pCusto;
+        nota.totalFrete = adProduto.frete;
+        nota.totalImposto = adProduto.imposto;
+        nota.qntProd = quantidade;
+        strcpy(nota.nomeProduto, adProduto.desc);
+        fwrite(&nota, sizeof(tipoNota), 1, j);
+        fclose(j);
 
         fwrite(&adProduto, sizeof(tipoProdutos), 1, p);
         fclose(p);
-        printf("Informacoes salvas em: %s", caminhoLog("produtos"));
+        printf("Informacoes salvas em: %s\n", caminhoLog("produtos"));
         return SUCCESS;
     }else
         return CANCELED;
 }
 
-void gerente(void)//CONCLUIDO
+int gerente(void)//CONCLUIDO
 {
     tipoGerente gerente;
 
     printf("Informe o nome do gerente do hotel: ");
-    fgets(gerente.nome, 99, stdin);
+    scanf("%100[^\n]", &gerente.telefone);
 
     do{
         printf("Informe o telefone do gerente do hotel (ddnnnnnnnnn/11 digitos): ");
@@ -163,24 +178,27 @@ void gerente(void)//CONCLUIDO
         setbuf(stdin, NULL);            
     }while(strlen(gerente.telefone) != 11);
 
-    printf("Nome: %sTelefone: %s\n\n", gerente.nome, gerente.telefone);
 
-    if(checkInfo())
+    if(checkInfo() == SUCCESS)
     {
         FILE *fGerente;
-        fGerente = fopen(caminhoLog("gerente"), "wb");
+        fGerente = fopen("C:\\ProgramData\\hotelSystem\\configs\\gerente.bin", "wb");
+        if(fGerente == NULL)
+        {
+            printf("Erro ao abrir arquivo do gerente!\n");
+            return EOPEN;
+        }
         fwrite(&gerente, sizeof(tipoGerente), 1, fGerente);
         fclose(fGerente);
-
-        printf("Informacoes salvas em: %s", caminhoLog("gerente"));//caminho
+        return SUCCESS;
     }
+    return CANCELED;
 }
 
 int fornecedores()//CONCLUIDO
 {
     tipoFornecedores fornecedor, aux;
 
-    printf("Fornecedor: \n\n");
     printf("Digite o nome social do fornecedor: ");
     scanf("%100[^\n]", fornecedor.nome);
     cleanBuff();
@@ -248,7 +266,6 @@ int fornecedores()//CONCLUIDO
 
         fwrite(&fornecedor, sizeof(tipoFornecedores), 1, p);
         fclose(p);
-        printf("Informacoes salvas em: %s", caminhoLog("fornecedores"));
         return SUCCESS;
     }
     else{
@@ -260,10 +277,8 @@ int verForn(int num, char *cnpj)//CONCLUIDO
 {
     FILE *p;
     tipoFornecedores aux;
-    char caminho[255];
-    strcpy(caminho, caminhoLog("fornecedores"));
 
-    p = fopen(caminho, "rb");
+    p = fopen(caminhoLog("fornecedores"), "rb");
     if(p == NULL)
     {
         return EOPEN;
@@ -271,54 +286,77 @@ int verForn(int num, char *cnpj)//CONCLUIDO
 
     while(!feof(p))
     {
-        if(!feof(p))
-        {
-            fread(&aux, sizeof(tipoFornecedores), 1, p);
+        fread(&aux, sizeof(tipoFornecedores), 1, p);
 
-            if(aux.codigo == num || strcmp(aux.cnpj, cnpj) == 0)
-                return SUCCESS;
+        if(feof(p))
+            break;
+
+        if(aux.codigo == num || strcmp(aux.cnpj, cnpj) == 0)
+        {
+            fclose(p);
+            return SUCCESS;
         }
     }
+    fclose(p);
     return FAILED;
 }
 
 int lista(char *tipo)//CONCLUIDO
 {
     FILE *p;
-    char caminho[255];
-    int tamanho;
-    strcpy(caminho, caminhoLog(tipo));
 
-    if(tamanhoArq(caminho) == 0)
+    if(strcmp(tipo, "quartos") == 0)
     {
-        return UNEXIST;
+        p = fopen("C:\\ProgramData\\hotelSystem\\configs\\quartos.bin", "rb");
+    }else
+    {
+        if(tamanhoArq(caminhoLog(tipo)) == 0)
+        {
+            return UNEXIST;
+        }
+        p = fopen(caminhoLog(tipo), "rb");
     }
 
-    p = fopen(caminho, "rb");
     if(p == NULL)
         return EOPEN;
 
     tipoFornecedores aux;
     tipoProdutos prod;
+    tipoQuartos q;
 
-    while(!feof(p))//le ate que seja o fim do arquivo
+
+    if( strcmp(tipo, "produtos") == 0)
     {
-        if( strcmp(tipo, "produtos") == 0)
+        while(!feof(p))
         {
             fread(&prod, sizeof(tipoProdutos), 1, p);
             if(feof(p))
                 break;
-            printf("Descricao: %s, Quantia no estoque: %d, Preco de venda: %.2f, Codigo: %d", prod.desc, prod.estoque, prod.pVenda, prod.codigo);
+            printf("Descricao: %s, Quantia no estoque: %d, Preco de venda: %.2f, Codigo: %d\n\n", prod.desc, prod.estoque, prod.pVenda, prod.codigo);
         }
-        else 
-        if(strcmp(tipo, "fornecedores") == 0)
+    }else
+    if(strcmp(tipo, "fornecedores") == 0)
+    {
+
+        while(!feof(p))
         {
             fread(&aux, sizeof(tipoFornecedores), 1, p);
             if(feof(p))//se ele já leu o fim do arquivo entao para
                 break;
-            printf("Nome: %s, cnpj: %s, codigo: %d\n", aux.nome, aux.cnpj, aux.codigo);
+            printf("Nome: %s, cnpj: %s, codigo: %d\n\n", aux.nome, aux.cnpj, aux.codigo);
+        }
+    }else
+    if(strcmp(tipo, "quartos") == 0)
+    {
+        while(!feof(p))//le ate que seja o fim do arquivo
+        {
+            fread(&q, sizeof(tipoQuartos), 1, p);
+            if(feof(p))
+                break;
+            printf("Descricao: %s\nTamanho: %d\tCategoria: %d\tValor: %.2f\nFacilidades: %s\tCodigo: %d\n\n", q.desc, q.tamanho, q.categoria, q.valor, q.facilidade, q.codigo);
         }
     }
+
     fclose(p);
     return SUCCESS;
 }
@@ -332,4 +370,136 @@ float calc(float pcusto, float frete, float imposto, float lucro, float quantida
     lucro *= total;
     total += lucro;
     return total;
+}
+
+void infotel()
+{
+    FILE *p = fopen("C:\\ProgramData\\hotelSystem\\configs\\hotel.bin", "rb");
+    if( p == NULL )
+    {
+        printf("Erro ao ler os dados do hotel\n");
+        return;
+    }
+    tipoHotel hotel;
+    fread(&hotel, sizeof(tipoHotel), 1, p);
+    fclose(p);
+
+    printf("Nome: %s\tRazao: %s\t", hotel.nome, hotel.razao);
+    printf("Horario de checkin: %d as %d horas\n", hotel.checkin.inicio, hotel.checkin.termino);
+    printf("Inscricao estadual: %s\tEndereco: %s\n", hotel.insc, hotel.endereco);
+    printf("Telefone: %s\tCnpj: %s\tEmail: %s\n", hotel.telefone, hotel.cnpj, hotel.email);
+    printf("O horario de checkout maximo e: %d horas e %d minutos!\n", hotel.checkout[0], hotel.checkout[1]);
+}
+
+int calcEstoque(int cod)
+{
+    FILE *p = fopen(caminhoLog("nota"), "rb");   
+    if( p == NULL )
+    {
+        return EOPEN;
+    }
+
+    int total = 0;
+
+    tipoNota nota;
+    while(!feof(p))
+    {
+        fread(&nota, sizeof(tipoNota), 1, p);
+        if( nota.codProd == cod )
+        {
+            total += nota.qntProd;//calcula o total do produto no estoque
+            break;
+        }
+    }
+    fclose(p);
+    
+    int linhas = 0;
+    tipoEstoque aux;
+    p = fopen(caminhoLog("estoque"), "ab");
+    if( p == NULL )
+        return EOPEN;
+
+    while(!feof(p))
+    {
+        fread(&aux, sizeof(tipoEstoque), 1, p);
+        if(feof(p))
+            break;
+            linhas++;
+    }
+    fseek(p, 0, SEEK_SET);//volta para o inicio
+    
+    tipoEstoque est[linhas];
+    linhas = 0;
+    while(!feof(p))
+    {
+        fread(est+linhas, sizeof(tipoEstoque), 1, p);
+        if( feof(p) )
+            break;
+            linhas++;
+    }
+
+    for( int i = 0; i <= linhas; i++)//remove onde o cod for repetido
+    {
+        if(est[i].codProd == cod)
+        {
+            for(int a = i; a < linhas; a++)
+            {
+                est[a].codProd = est[1+a].codProd;
+                est[a].quant = est[1+a].quant;
+            }
+            linhas--;
+        }
+    }
+
+    fwrite(est, sizeof(tipoEstoque), linhas, p);
+    fclose(p);
+}
+
+int addQuarto()
+{
+    tipoQuartos q, aux;
+    printf("Qual a categoria do quarto (1,2,3): ");
+    scanf("%d", &q.categoria);
+    cleanBuff();
+
+    printf("Qual o numero de pessoas que o quarto comporta: ");
+    scanf("%d", &q.tamanho);
+    cleanBuff();
+
+    printf("Qual o valor da diaria do quarto (75.00): R$");
+    scanf("%f", &q.valor);
+    cleanBuff();
+
+    printf("De uma descricao rapida para o quarto: ");
+    scanf("%255[^\n]", &q.desc);
+    cleanBuff();
+
+    printf("Informe o que tem no quarto (ex: ventilador, ar condicionado, etc): ");
+    scanf("%255[^\n]", &q.facilidade);
+    cleanBuff();
+
+    if( checkInfo() == CANCELED )
+        return CANCELED;
+
+    FILE *p = fopen("C:\\ProgramData\\hotelSystem\\configs\\quartos.bin", "ab+");
+    if ( p == NULL)
+        return EOPEN;
+
+    if(tamanhoArq("C:\\ProgramData\\hotelSystem\\configs\\quartos.bin") == 0)
+    {
+        q.codigo = 1;
+
+    }else
+    {
+        fseek(p, -sizeof(tipoQuartos), SEEK_END);//vai pro penultimo dado salvo
+        fread(&aux, sizeof(tipoQuartos), 1, p);
+        aux.codigo++;
+        q.codigo = aux.codigo;
+        fseek(p, 0, SEEK_END);//volta para o final
+    }
+
+
+    fwrite(&q, sizeof(tipoQuartos), 1, p);
+    fclose(p);
+    return SUCCESS;
 }

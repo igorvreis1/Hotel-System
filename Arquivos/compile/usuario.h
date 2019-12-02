@@ -26,4 +26,12 @@
 
     */
     void statuscad(int cad);
+
+    /*
+
+    */
+   void menuAdm();
+
+   /**/
+   void menuFunc();
 #endif
